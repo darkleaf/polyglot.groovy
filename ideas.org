@@ -1,0 +1,122 @@
+;; перезагрузку нафиг, сами сделаем в стиле кложи
+
+* не улучшать ничего
+
+пока ничего не понятно, лучше ничего не делать
+
+вполне себе:
+#+begin_src groovy
+  IFn name = read ':foo.bar/name'
+  name.invoke(user)
+#+end_src
+
+
+* почитать про DSL
+
+https://docs.groovy-lang.org/latest/html/documentation/core-domain-specific-languages.html
+
++ можно класс скрипта задавать через аннотации
+  наверное можно сразу AFn использовать и просто методы объявлять
++ есть еще какой-то dsl для объявления настроек компилятора
+  + можно автоимпортить всякое
+  + можно compilestatic всем выставить
+
+** конфиг для компилятора
+
+в ...ui... есть метод, который все сделает
+
+** билдер
+
+#+begin_src groovy
+  threadingFirst(x).call(fn, arg).call(fn2, arg)
+#+end_src
+
+** with(IFn)
+
+через экстеншен работает, но толку мало
+
+with(f, a, b, c, d)
+rwith(map, inc)
+
+
+* meta class для Var или IDeref
+чтобы проксировать без deref
+
+а может и не надо,
+может контракт какой-то нарушит
+
+вроде
+#+begin_src groovy
+  atom.foo
+  atom.bar
+
+  // тут точно у одного объекта спрашивали
+  x = atom.deref()
+  x.foo
+  x.bar
+#+end_src
+
+
+* экстеншены
+
+работают в clojure, нужно заранее скомпилить экстеншены. бр
+
+* разобраться с groovy.lang.Reference
+
+может быть стоит делать final при var('cc', 'map')
+
+может быть нужно скрипту реализовывать IFn.
+может быть из invoke() вызывать run()?
+
+или свой какой-то класс сделать
+
+* ns
+
+#+begin_src groovy
+ ns1 = ns 'foo.bar'
+ IFn = ns1.var /x->y/
+ Keyword = ns1.keyword /z->v/
+ Symbol =  ns1.symbol />>/
+#+end_src
+
+* fn
+
+#+begin_src groovy
+  fn { it + 1 }
+#+end_src
+
+наверное так не стоит делать
+
+
+* MyAbstractFn
+
+сделать вроде AFn, но чтобы методы были абстрактные.
+Может быть замыкание получится преобразовать
+
+{ ... } as MyAbstractFn
+
+* трансформация
+
+всем ifn заменить .call на .invoke.
+
+* trait
+
+#+begin_src groovy
+  trait ClosureFn implements IFn {
+    def invoke() {
+      call()
+    }
+
+    def invoke(a1) {
+      call(a1)
+    }
+
+    def invoke(a1, a2) {
+      call a1, a2
+    }
+  }
+
+  { ... } as ClosureFn
+#+end_src
+
+создает объект с IFn, но без Closure
