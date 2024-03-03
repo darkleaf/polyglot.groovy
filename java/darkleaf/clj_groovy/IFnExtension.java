@@ -46,7 +46,8 @@ public class IFnExtension {
 
     public static Object call(
         IFn f,
-        Object a1, Object a2, Object a3, Object a4, Object a5, Object a6
+        Object a1, Object a2, Object a3, Object a4, Object a5,
+        Object a6
     ) {
         return f.invoke(a1, a2, a3, a4, a5, a6);
     }
@@ -86,7 +87,8 @@ public class IFnExtension {
     public static Object call(
         IFn f,
         Object a1, Object a2, Object a3, Object a4, Object a5,
-        Object a6, Object a7, Object a8, Object a9, Object a10, Object a11
+        Object a6, Object a7, Object a8, Object a9, Object a10,
+        Object a11
     ) {
         return f.invoke(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11);
     }
