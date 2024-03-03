@@ -18,7 +18,7 @@
 
 
 (defn run-script [ns name]
-  (let [full-name    (str (munge ns) "." (munge name))
+  (let [full-name    (munge (str ns "." name))
         ;; без второго false не будет перезагрузки
         script-class (.loadClass class-loader full-name true false true)]
     (InvokerHelper/runScript script-class nil)))
