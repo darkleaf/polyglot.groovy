@@ -19,6 +19,10 @@
             :basis @basis
             :javac-opts ["--release" "11" "-proc:none"]}))
 
+(defn prep-lib [_]
+  (clean nil)
+  (compile nil))
+
 #_
 (defn jar [_]
   (compile nil)

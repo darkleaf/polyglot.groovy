@@ -1,3 +1,3 @@
 ```sh
-$ clj -T:build compile
+clj -T:build prep-lib
 ```
