@@ -9,28 +9,6 @@
 (set! *warn-on-reflection* true)
 
 
-
-;; rwith vs with
-;; as rcurry vs curry
-
-(defn ext-with
-  ([this f]
-   (f this))
-  ([this f a1]
-   (f this a1)))
-
-(defn ext-rwith
-  ([this f a1]
-   (f a1 this)))
-
-(defn ext-call
-  ([this]
-   (this))
-  ([this a1]
-   (this a1))
-  ([this a1 a2]
-   (this a1 a2)))
-
 (defonce ^GroovyClassLoader class-loader
   (doto (GroovyClassLoader.
          (.. Thread currentThread getContextClassLoader)

@@ -1,6 +1,12 @@
-{:paths ["src" "classes"]
- :deps {org.clojure/clojure      {:mvn/version "1.11.0"}
-        org.apache.groovy/groovy {:mvn/version "4.0.18"}
-        criterium/criterium      {:mvn/version "0.4.6"}}
+{:paths ["resources" "src" "target/classes"]
+ :deps  {org.clojure/clojure      {:mvn/version "1.11.0"}
+         org.apache.groovy/groovy {:mvn/version "4.0.18"}
+         criterium/criterium      {:mvn/version "0.4.6"}}
+
+ :deps/prep-lib {:alias  :build
+                 :fn     compile
+                 :ensure "target/classes"}
  :aliases
- {:dev {}}}
+ {:dev   {}
+  :build {:deps       {io.github.clojure/tools.build {:mvn/version "0.9.6"}}
+          :ns-default build}}}

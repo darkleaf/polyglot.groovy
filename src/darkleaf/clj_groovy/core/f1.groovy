@@ -1,4 +1,4 @@
-package example
+package darkleaf.clj_groovy.core
 
 import clojure.lang.AFunction
 import clojure.lang.IFn

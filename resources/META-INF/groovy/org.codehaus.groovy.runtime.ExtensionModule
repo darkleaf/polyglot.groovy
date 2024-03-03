@@ -1,0 +1,3 @@
+moduleName=Clojure and Groovy
+moduleVersion=1.0
+extensionClasses=darkleaf.clj_groovy.ObjectExtension,darkleaf.clj_groovy.IFnExtension
