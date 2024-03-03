@@ -8,17 +8,7 @@
 
 (set! *warn-on-reflection* true)
 
-(gen-class
- :name "example.Extension"
- :prefix "ext-"
- :methods [^:static [with [Object, clojure.lang.IFn] Object]
-           ^:static [with [Object, clojure.lang.IFn Object] Object]
 
-           ^:static [rwith [Object, clojure.lang.IFn Object] Object]
-
-           ^:static [call [clojure.lang.IFn,] Object]
-           ^:static [call [clojure.lang.IFn, Object] Object]
-           ^:static [call [clojure.lang.IFn, Object Object] Object]])
 
 ;; rwith vs with
 ;; as rcurry vs curry
