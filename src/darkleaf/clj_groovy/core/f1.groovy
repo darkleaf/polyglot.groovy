@@ -1,7 +1,6 @@
 package darkleaf.clj_groovy.core
 
-import clojure.lang.AFunction
-import clojure.lang.IFn
+import clojure.lang.*
 import static clojure.java.api.Clojure.var
 import static clojure.java.api.Clojure.read
 

@@ -37,7 +37,8 @@
 
 (comment
   (c/quick-bench
-      (f1 [{:foo 1}])))
+      (f1 [{:foo 1}]))
+  ,,,)
 
 
 (defn f1-clj [data]
