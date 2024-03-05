@@ -9,6 +9,10 @@
 Использум clojure var для коммуникации.
 Это точно. Не получится динамически классы перезагружать и использовать через import.
 
+* обновление var при сохранении groovy файла
+
+https://github.com/nextjournal/beholder
+
 * api для интеропа
 
 ~clojure.java.api.Clojure.var~. Тут нужно явно делать require.
