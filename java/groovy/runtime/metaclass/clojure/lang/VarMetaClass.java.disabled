@@ -30,6 +30,10 @@ public class VarMetaClass extends DelegatingMetaClass {
 
     // нужно разобраться с всей этой магией, но вроде работает
 
+
+    // наверное нужно использовать methodMissing
+    // а может быть можно просто как-то настроить delegating чтобы делегировал внутрь
+
     public Object invokeMethod(Object object, String name, Object[] args) {
         System.out.println("invokeMethod(Object object, String name, Object[] args)");
         System.out.println(object);
