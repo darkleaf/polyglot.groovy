@@ -1,17 +1,80 @@
-;; перезагрузку нафиг, сами сделаем в стиле кложи
+* скрипт или класс?
 
-* не улучшать ничего
+Пока скрипт выигрывает, т.к. можно любое значение положить в var,
+например не только функцию, но и класс.
+Или даже Groovy Object.
 
-пока ничего не понятно, лучше ничего не делать
+* var
 
-вполне себе:
+Использум clojure var для коммуникации.
+Это точно. Не получится динамически классы перезагружать и использовать через import.
+
+* api для интеропа
+
+~clojure.java.api.Clojure.var~. Тут нужно явно делать require.
+Но уже есть ~requiring-resolve~.
+Надо на его основе сделать.
+
+И наверное это просто класс с статическими методами
+
++ ns
+  + пример
+    ~def foo = ns 'clojure.core' key 'foo'~, вроде бы можно такой dsl сделать.
+  + var
+  + key
+  + sym
+  + ns ? типа сам объект неймспейса возвращать, для работы с функциями ~ns-imports~ и т.п.
++ read
+  просто прочитать, пусть будет
+
+Внутри понятно, нужно будет использовать ~Clojure.var~.
+
+* ns
+
 #+begin_src groovy
-  IFn name = read ':foo.bar/name'
-  name.invoke(user)
+ ns1 = ns 'foo.bar'
+ IFn = ns1.var /x->y/
+ Keyword = ns1.keyword /z->v/
+ Symbol =  ns1.symbol />>/
 #+end_src
+
+Но, вроде бы не стоит полагаться на сами классы, лучше использовать кложовые функции.
+
+типа ~my_var.with(deref)~ лучше, чем ~my_var.deref()~
+
+
+* meta class для Var
+чтобы проксировать без deref
+
+Для IDeref это точно не нужно, т.к. может контракт какой-то нарушит,
+а для Var - ok
+
+вроде
+#+begin_src groovy
+  my_var.foo
+  my_var.bar
+
+  // тут точно у одного объекта спрашивали
+  x = my_var.deref()
+  x.foo
+  x.bar
+#+end_src
+
+* разобраться с groovy.lang.Reference
+
+может быть стоит делать final при var('cc', 'map')
+
+может быть нужно скрипту реализовывать IFn.
+может быть из invoke() вызывать run()?
+
+или свой какой-то класс сделать
 
 
 * почитать про DSL
+
+Наверное по умолчанию не нужно ничего особо настраивать,
+разве заимпортить dsl для интеропа
+
 
 https://docs.groovy-lang.org/latest/html/documentation/core-domain-specific-languages.html
 
@@ -39,46 +102,6 @@ with(f, a, b, c, d)
 rwith(map, inc)
 
 
-* meta class для Var или IDeref
-чтобы проксировать без deref
-
-а может и не надо,
-может контракт какой-то нарушит
-
-вроде
-#+begin_src groovy
-  atom.foo
-  atom.bar
-
-  // тут точно у одного объекта спрашивали
-  x = atom.deref()
-  x.foo
-  x.bar
-#+end_src
-
-
-* экстеншены
-
-работают в clojure, нужно заранее скомпилить экстеншены. бр
-
-* разобраться с groovy.lang.Reference
-
-может быть стоит делать final при var('cc', 'map')
-
-может быть нужно скрипту реализовывать IFn.
-может быть из invoke() вызывать run()?
-
-или свой какой-то класс сделать
-
-* ns
-
-#+begin_src groovy
- ns1 = ns 'foo.bar'
- IFn = ns1.var /x->y/
- Keyword = ns1.keyword /z->v/
- Symbol =  ns1.symbol />>/
-#+end_src
-
 * fn
 
 #+begin_src groovy
@@ -101,6 +124,8 @@ rwith(map, inc)
 
 * trait
 
+не нужно
+
 #+begin_src groovy
   trait ClosureFn implements IFn {
     def invoke() {
@@ -120,3 +145,19 @@ rwith(map, inc)
 #+end_src
 
 создает объект с IFn, но без Closure
+
+* макрос ..
+
+#+begin_src clojure
+  (g/.. obj (a 42) (b "xxx"))
+#+end_src
+
+через InvokeHelper видимо, там есть такой метод для вызова груви методов
+
+
+* проставлять arglist и метаданые
+
+Как-то определять списко параметорв и формировать метаданные.
+
+Может быть даже как-то docstring присобачить.
+Например, брать из поля скрипта.
