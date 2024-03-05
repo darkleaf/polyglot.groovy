@@ -1,20 +1,18 @@
 package darkleaf.clj_groovy.core
 
-import clojure.lang.*
-import static clojure.java.api.Clojure.var
-import static clojure.java.api.Clojure.read
+def cc = ns 'clojure.core'
 
-IFn inc = var 'clojure.core', 'inc'
-IFn map = var 'clojure.core', 'map'
-IFn str = var 'clojure.core', 'str'
+def inc = cc.var 'inc'
+def map = cc.var 'map'
+def str = cc.var 'str'
 
-IFn foo = (IFn) read(':foo')
-
+def foo = ns 'darkleaf.clj-groovy.core' key 'foo'
 
 new AFunction() {
-  def invoke(Object data) {
+  def invoke(data) {
     data
       .rwith(map, foo)
       .rwith(map, inc)
+      .rwith(map, str)
   }
 }
