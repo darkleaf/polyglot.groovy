@@ -105,6 +105,10 @@ https://docs.groovy-lang.org/latest/html/documentation/core-domain-specific-lang
 with(f, a, b, c, d)
 rwith(map, inc)
 
+* конфигурировать
+
+Сейчас похоже можно просто подложить другой конфиг.
+Но если нужно несколько конфигов?
 
 * fn
 
