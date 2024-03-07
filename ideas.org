@@ -88,23 +88,6 @@ https://docs.groovy-lang.org/latest/html/documentation/core-domain-specific-lang
   + можно автоимпортить всякое
   + можно compilestatic всем выставить
 
-** конфиг для компилятора
-
-в ...ui... есть метод, который все сделает
-
-** билдер
-
-#+begin_src groovy
-  threadingFirst(x).call(fn, arg).call(fn2, arg)
-#+end_src
-
-** with(IFn)
-
-через экстеншен работает, но толку мало
-
-with(f, a, b, c, d)
-rwith(map, inc)
-
 * конфигурировать
 
 Сейчас похоже можно просто подложить другой конфиг.
