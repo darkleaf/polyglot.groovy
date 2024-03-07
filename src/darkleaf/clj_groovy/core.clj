@@ -1,8 +1,10 @@
 (ns darkleaf.clj-groovy.core
   (:require
-   [criterium.core :as c])
+   [criterium.core :as c]
+   [clojure.java.io :as io])
   (:import
    (groovy.lang GroovyClassLoader)
+   (groovy.ui GroovyMain)
    (org.codehaus.groovy.control CompilerConfiguration)
    (org.codehaus.groovy.control.customizers CompilationCustomizer
                                             ImportCustomizer)
@@ -10,18 +12,12 @@
 
 (set! *warn-on-reflection* true)
 
-(defonce ^GroovyClassLoader class-loader
-  (doto (GroovyClassLoader.
-         (.. Thread currentThread getContextClassLoader)
-         (doto (CompilerConfiguration.)
-           (.setRecompileGroovySource true)
-           (.addCompilationCustomizers
-            (into-array CompilationCustomizer
-                        [(.. (ImportCustomizer.)
-                             (addStaticImport "darkleaf.clj_groovy.ClojureDSL" "ns")
-                             (addStaticImport "darkleaf.clj_groovy.ClojureDSL" "read")
-                             (addStarImports (into-array String ["clojure.lang"])))]))
-           #_(.setMinimumRecompilationInterval 0)))))
+(def ^GroovyClassLoader class-loader
+  (let [cc     (CompilerConfiguration.)
+        config (-> "darkleaf/clj_groovy/config.groovy" io/resource slurp)
+        _      (GroovyMain/processConfigScriptText config cc)
+        cl     (.. Thread currentThread getContextClassLoader)]
+    (GroovyClassLoader. cl cc)))
 
 
 (defn run-script [ns name]
