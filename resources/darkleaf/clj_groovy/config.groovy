@@ -9,8 +9,7 @@ withConfig(configuration) {
     staticMember 'clojure.java.api.Clojure', 'var'
     staticMember 'clojure.java.api.Clojure', 'read'
 
-    // staticMember 'darkleaf.clj_groovy.ClojureDSL', 'ns'
-    // staticMember 'darkleaf.clj_groovy.ClojureDSL', 'read'
+    normal 'groovy.transform.CompileStatic'
   }
 
   // ast(groovy.transform.CompileStatic)
