@@ -4,6 +4,20 @@ import clojure.java.api.Clojure;
 
 import clojure.lang.*;
 
+
+/*
+
+Не стоит ходить через классы, нужно ходить через функции.
+
+IFn my_var = var('...', 'my_var').with(deref)
+
+так же и keyword
+
+requiring-resolve удобная штука, но вряд ли нужно будет подключать что-то кроме
+clojure.core или уже подключенных.
+
+*/
+
 public class ClojureDSL {
     public static class Namespace {
         static IFn resolve = Clojure.var("clojure.core", "requiring-resolve");
