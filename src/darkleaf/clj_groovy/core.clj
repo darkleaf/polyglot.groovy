@@ -6,19 +6,19 @@
    (groovy.lang GroovyClassLoader)
    (groovy.ui GroovyMain)
    (org.codehaus.groovy.control CompilerConfiguration)
-   (org.codehaus.groovy.control.customizers CompilationCustomizer
-                                            ImportCustomizer)
    (org.codehaus.groovy.runtime InvokerHelper)))
 
 (set! *warn-on-reflection* true)
 
-(def ^GroovyClassLoader class-loader
+(def ^CompilerConfiguration compiler-configuration
   (let [cc     (CompilerConfiguration.)
-        config (-> "darkleaf/clj_groovy/config.groovy" io/resource slurp)
-        _      (GroovyMain/processConfigScriptText config cc)
-        cl     (.. Thread currentThread getContextClassLoader)]
-    (GroovyClassLoader. cl cc)))
+        config (-> "darkleaf/clj_groovy/config.groovy" io/resource slurp)]
+    (GroovyMain/processConfigScriptText config cc)
+    cc))
 
+(def ^GroovyClassLoader class-loader
+  (let [cl (.. Thread currentThread getContextClassLoader)]
+    (GroovyClassLoader. cl compiler-configuration)))
 
 (defn run-script [ns name]
   (let [full-name    (munge (str ns "." name))
@@ -30,14 +30,9 @@
   `(def ~script-name (run-script *ns* '~script-name)))
 
 
-
-
-
-
-
-(defobject f1)
-
 (comment
+  (defobject f1)
+
   (f1 [{::foo 2}])
 
 
