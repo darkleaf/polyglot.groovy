@@ -31,39 +31,6 @@
 
 
 (comment
-  (defobject f1)
-
-  (f1 [{::foo 2}])
-
-
-  (do
-    (defobject f2)
-    (f2 [{:foo 2}]))
-
-  ,,,)
-
-;; Execution time mean : 48,473920 ns
-
-(comment
-  (c/quick-bench
-      (f2 [{:foo 1}]))
-  ,,,)
-
-
-(defn f1-clj [data]
-  (->> data
-       (map :foo)
-       (map inc)))
-
-(comment
-  (c/quick-bench
-      (f1-clj [{:foo 2}]))
-  ,,,)
-
-;;              Execution time mean : 18,969550 ns
-
-
-(comment
   (defobject klass)
 
   (defobject use-klass)
