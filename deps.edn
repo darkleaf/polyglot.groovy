@@ -7,7 +7,8 @@
                  :fn     prep-lib
                  :ensure "target/classes"}
  :aliases
- {:dev   {:extra-deps {criterium/criterium      {:mvn/version "0.4.6"}
-                       com.nextjournal/beholder {:mvn/version "1.0.2"}}}
+ {:dev   {:extra-paths ["test" "benchmark"]
+          :extra-deps  {criterium/criterium      {:mvn/version "0.4.6"}
+                        com.nextjournal/beholder {:mvn/version "1.0.2"}}}
   :build {:deps       {io.github.clojure/tools.build {:mvn/version "0.9.6"}}
           :ns-default build}}}

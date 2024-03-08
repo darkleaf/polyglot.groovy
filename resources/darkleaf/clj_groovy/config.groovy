@@ -3,9 +3,14 @@ configuration.recompileGroovySource = true
 
 withConfig(configuration) {
   imports {
-    star 'clojure.lang'
-    staticMember 'darkleaf.clj_groovy.ClojureDSL', 'ns'
-    staticMember 'darkleaf.clj_groovy.ClojureDSL', 'read'
+    normal 'clojure.lang.IFn'
+    normal 'clojure.lang.AFunction'
+
+    staticMember 'clojure.java.api.Clojure', 'var'
+    staticMember 'clojure.java.api.Clojure', 'read'
+
+    // staticMember 'darkleaf.clj_groovy.ClojureDSL', 'ns'
+    // staticMember 'darkleaf.clj_groovy.ClojureDSL', 'read'
   }
 
   // ast(groovy.transform.CompileStatic)
