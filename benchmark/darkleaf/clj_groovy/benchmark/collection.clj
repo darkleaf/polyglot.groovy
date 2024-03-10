@@ -9,6 +9,13 @@
        (mapv inc)
        (mapv str)))
 
+(defn clj-2 [data]
+  (into []
+        (comp (map inc)
+              (map str))
+        data))
+
+
 (g/defobject gr-1)
 
 (g/defobject gr-2)
@@ -22,6 +29,9 @@
 
   (c/quick-bench (clj data))
   ;; Execution time mean : 481,892247 ns
+
+  (c/quick-bench (clj-2 data))
+  ;; Execution time mean : 385,459450 ns
 
   (c/quick-bench (gr-1 data))
   ;; Execution time mean : 542,851039 ns
