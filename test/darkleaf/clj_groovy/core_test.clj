@@ -58,6 +58,13 @@
            test-call)))
 
 
+;; todo: test-tap
+
+#_#_
+(g/defobject test-tap)
+(t/deftest tap-test)
+
+
 (g/defobject test-with)
 
 (t/deftest with-test
