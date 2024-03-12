@@ -1,7 +1,7 @@
 new AFunction() {
-  def invoke(ctx) {
-    ctx.tap {
-      span "inner"
+  def invoke(builder) {
+    builder.tap {
+      span class: "inner", "inner"
     }
   }
 }
