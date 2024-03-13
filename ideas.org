@@ -1,3 +1,29 @@
+* class
+
+Если нужно именно class вернуть, то можно сделать так
+
+#+begin_src groovy
+  // Constructor это наследник AFunction
+  // может быть вынести в интерфейс метод getClass, но зачем?
+  new Constuctor() {
+    // или вроде того
+    Class getClass() {
+      MyClass
+    }
+
+    def invoke() {
+      new MyClass()
+    }
+
+    def invoke(x) {
+      new MyClass(x)
+    }
+  }
+#+end_src
+
+Т.к. в груви будет передаваться var с Constructor внутри, то можно
+добавить экстеншен для Var, чтобы получать class.
+
 * пакет
 
 Если оставлять так, как есть, то будет проблема при компиляции.
@@ -10,6 +36,8 @@ foo/bar
 
 foo/bar/Script.groovy
 
+
+если делать анонимный класс, то все ок, он будет inner.
 
 * скрипт или класс?
 
@@ -170,3 +198,24 @@ https://docs.groovy-lang.org/latest/html/documentation/core-domain-specific-lang
 
 Может быть даже как-то docstring присобачить.
 Например, брать из поля скрипта.
+
+Может быть просто прописывать метаданные вручную, в каком-то методе,
+но только groovy структурами, а не кложовыми.
+
+#+begin_src groovy
+  new Fn() {
+    def meta = read("""
+      {:arglists (() (x))}
+    """)
+
+    def docstring = """
+    """
+
+
+    def invoke() {
+    }
+
+    def invoke(x) {
+    }
+  }
+#+end_src
