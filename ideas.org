@@ -54,6 +54,13 @@ foo/bar/Script.groovy
 
 https://github.com/nextjournal/beholder
 
+
+Писать в stdout ошибку?
+
+Можно еще менять var на функцию, которая будет кидать ошибку компиляции.
+Можно наверное сделать опцию, чтобы только в лог? хотя зачем? кто в проде будет менять?
+
+
 * api для интеропа
 
 ~clojure.java.api.Clojure.var~. Тут нужно явно делать require.
