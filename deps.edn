@@ -7,7 +7,7 @@
                  :fn     prep-lib
                  :ensure "target/classes"}
  :aliases
- {:dev {:extra-paths ["test" "benchmark"]
+ {:dev {:extra-paths ["test" "dev"]
         :extra-deps  {criterium/criterium          {:mvn/version "0.4.6"}
                       com.nextjournal/beholder     {:mvn/version "1.0.2"}
                       org.apache.groovy/groovy-xml {:mvn/version "4.0.18"}
