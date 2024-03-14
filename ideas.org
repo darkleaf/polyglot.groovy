@@ -259,6 +259,23 @@ https://docs.groovy-lang.org/latest/html/documentation/core-domain-specific-lang
   IFn mapv = var 'clojure.core', 'mapv' with<IFn> deref
 #+end_src
 
+#+begin_src java
+  public static <R> R xwith(
+      Object self, IFn f
+  ) {
+      // разобраться с этой штукой
+      //@SuppressWarning("unchecked")
+
+      return (R) f.invoke(self);
+  }
+#+end_src
+
+и вроде как можно вот так писать
+
+#+begin_src groovy
+  IFn mapv = var 'clojure.core', 'mapv' with deref
+#+end_src
+
 * проверки
 
 проверять имя класса и пакет
