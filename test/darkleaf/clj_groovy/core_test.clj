@@ -22,13 +22,13 @@
 (g/defobject test-read)
 
 (t/deftest read-test
-  (t/is (= :x test-read)))
+  (t/is (= :x (test-read))))
 
 
 (g/defobject test-var)
 
 (t/deftest var-test
-  (t/is (= #'inc test-var)))
+  (t/is (= #'inc (test-var))))
 
 
 (g/defobject test-call)
@@ -55,7 +55,7 @@
             [1 2 3 4 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
             [1 2 3 4 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20]
             [1 2 3 4 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21]]
-           test-call)))
+           (test-call))))
 
 
 ;; todo: test-tap
@@ -89,7 +89,7 @@
             ["%" 1 2 3 4 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
             ["%" 1 2 3 4 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20]
             ["%" 1 2 3 4 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21]]
-           test-with)))
+           (test-with))))
 
 
 (g/defobject test-rwith)
@@ -115,4 +115,4 @@
             [1 2 3 4 6 7 8 9 10 11 12 13 14 15 16 17 18 19 "%"]
             [1 2 3 4 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 "%"]
             [1 2 3 4 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 "%"]]
-           test-rwith)))
+           (test-rwith))))

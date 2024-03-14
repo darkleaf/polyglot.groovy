@@ -1,6 +1,6 @@
 package darkleaf.clj_groovy.core_test
 
-new AFunction() {
+class test_fn extends AFunction {
   def invoke() {
     []
   }

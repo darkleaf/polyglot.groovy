@@ -1,6 +1,6 @@
 package darkleaf.clj_groovy.benchmark.collection
 
-new AFunction() {
+class gr_3 extends AFunction {
   def invoke(data) {
     // ++ is next()
     data*.next()*.toString()

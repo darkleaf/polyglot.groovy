@@ -1,11 +1,10 @@
 package darkleaf.clj_groovy.benchmark.collection
 
-IFn mapv = var 'clojure.core', 'mapv'
+class gr_1 extends AFunction {
+  static final IFn mapv = var 'clojure.core', 'mapv'
+  static final IFn inc  = var 'clojure.core', 'inc'
+  static final IFn str  = var 'clojure.core', 'str'
 
-IFn inc = var 'clojure.core', 'inc'
-IFn str = var 'clojure.core', 'str'
-
-new AFunction() {
   def invoke(data) {
     data
       .rwith(mapv, inc)

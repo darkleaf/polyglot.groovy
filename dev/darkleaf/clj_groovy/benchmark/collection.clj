@@ -28,25 +28,25 @@
   (def data [1 2 3])
 
   (c/quick-bench (clj data))
-  ;; Execution time mean : 481,892247 ns
+  ;; Execution time mean : 515,502287 ns
 
   (c/quick-bench (clj-2 data))
-  ;; Execution time mean : 385,459450 ns
+  ;; Execution time mean : 489,407614 ns
 
   (c/quick-bench (gr-1 data))
-  ;; Execution time mean : 542,851039 ns
+  ;; Execution time mean : 676,218216 ns
 
   ;; CompileStatic + var deref
   (c/quick-bench (gr-2 data))
-  ;; Execution time mean : 432,341871 ns
+  ;; Execution time mean : 534,566292 ns
 
   ;; dynamic groovy and j.u.ArrayList
   (c/quick-bench (gr-3 data))
   (class (gr-3 data))
-  ;; Execution time mean : 867,550716 ns
+  ;; Execution time mean : 642,891434 ns
 
   ;; type hint, CompileStatic, and j.u.ArrayList
   (c/quick-bench (gr-4 data))
-  ;; Execution time mean : 106,285688 ns
+  ;; Execution time mean : 123,405755 ns
 
   ,,,)

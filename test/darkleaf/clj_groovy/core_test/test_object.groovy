@@ -1,6 +1,6 @@
 package darkleaf.clj_groovy.core_test
 
-new Object() {
+class test_object {
   String toString() {
     "test object"
   }

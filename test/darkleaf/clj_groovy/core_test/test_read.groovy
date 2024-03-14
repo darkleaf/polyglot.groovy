@@ -1,3 +1,7 @@
 package darkleaf.clj_groovy.core_test
 
-read ':x'
+class test_read extends AFunction {
+  def invoke() {
+    read ':x'
+  }
+}

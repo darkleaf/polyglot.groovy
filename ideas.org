@@ -258,3 +258,9 @@ https://docs.groovy-lang.org/latest/html/documentation/core-domain-specific-lang
   // может быть это позволит писать так:
   IFn mapv = var 'clojure.core', 'mapv' with<IFn> deref
 #+end_src
+
+* проверки
+
+проверять имя класса и пакет
+наверное уже в clj,
+но может быть и в груви что-то можно подкрутить

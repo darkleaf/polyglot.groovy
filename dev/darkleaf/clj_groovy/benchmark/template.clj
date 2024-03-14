@@ -24,12 +24,10 @@
   (gr)
   (clj)
 
-  (c/quick-bench
-      (gr))
+  (c/quick-bench (gr))
   ;; Execution time mean : 9,146391 µs
 
-  (c/quick-bench
-      (clj))
+  (c/quick-bench (clj))
   ;; Execution time mean : 3,050910 µs
   ,,,)
 

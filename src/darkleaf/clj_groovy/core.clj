@@ -20,14 +20,19 @@
   (let [cl (.. Thread currentThread getContextClassLoader)]
     (GroovyClassLoader. cl compiler-configuration)))
 
-(defn run-script [ns name]
-  (let [full-name    (munge (str ns "." name))
-        ;; без второго false не будет перезагрузки
-        script-class (.loadClass class-loader full-name true false true)]
-    (InvokerHelper/runScript script-class nil)))
+(defn instantiate [ns name]
+  (let [full-name (munge (str ns "." name))
+        klass     (.loadClass class-loader
+                              full-name
+                              ;; названия не говорят ничего
+                              #_lookupScriptFiles true
+                              ;; без false не будет перезагрузки
+                              #_preferClassOverScript false
+                              #_resolve true)]
+    (InvokerHelper/invokeNoArgumentsConstructorOf klass)))
 
-(defmacro defobject [script-name]
-  `(def ~script-name (run-script *ns* '~script-name)))
+(defmacro defobject [klass-name]
+  `(def ~klass-name (instantiate *ns* '~klass-name)))
 
 
 (comment
