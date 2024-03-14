@@ -244,3 +244,17 @@ https://docs.groovy-lang.org/latest/html/documentation/core-domain-specific-lang
     }
   }
 #+end_src
+
+
+* расширения и дженерики
+
+#+begin_src groovy
+  // вместо такого
+  IFn mapv = (IFn) var('clojure.core', 'mapv').with(deref)
+
+  // сделать
+  IFn mapv = var('clojure.core', 'mapv').with<IFn>(deref)
+
+  // может быть это позволит писать так:
+  IFn mapv = var 'clojure.core', 'mapv' with<IFn> deref
+#+end_src
