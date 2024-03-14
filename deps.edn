@@ -1,6 +1,6 @@
 {:paths ["resources" "src" "target/classes"]
  :deps  {org.clojure/clojure        {:mvn/version "1.11.0"}
-         org.apache.groovy/groovy   {:mvn/version "4.0.18"}
+         org.apache.groovy/groovy   {:mvn/version "4.0.20"}
          org.clojure/java.classpath {:mvn/version "1.1.0"}}
 
  :deps/prep-lib {:alias  :build
@@ -10,7 +10,7 @@
  {:dev {:extra-paths ["test" "dev"]
         :extra-deps  {criterium/criterium          {:mvn/version "0.4.6"}
                       com.nextjournal/beholder     {:mvn/version "1.0.2"}
-                      org.apache.groovy/groovy-xml {:mvn/version "4.0.18"}
+                      org.apache.groovy/groovy-xml {:mvn/version "4.0.20"}
                       dev.onionpancakes/chassis    {:mvn/version "1.0.353"}}}
 
   :build {:deps       {io.github.clojure/tools.build {:mvn/version "0.9.6"}}
