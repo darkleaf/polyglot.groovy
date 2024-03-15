@@ -1,4 +1,4 @@
-* class
+* DONE class
 
 Если нужно именно class вернуть, то можно сделать так
 
@@ -31,7 +31,7 @@
 Подумать еще как всякие orm использовать.
 Или как минимум грамматику и jdbi или вроде того.
 
-* пакет
+* DONE пакет
 
 Если оставлять так, как есть, то будет проблема при компиляции.
 Т.к. класс в скрипте будет глобальный для пакета, а не вложенный в скрипт.
@@ -46,14 +46,14 @@ foo/bar/Script.groovy
 
 если делать анонимный класс, то все ок, он будет inner.
 
-* скрипт или класс?
+* DONE скрипт или класс?
 
 Пока скрипт выигрывает, т.к. можно любое значение положить в var,
 например не только функцию, но и класс.
 Или даже Groovy Object.
 
 Надо именно класс возвращать, с нулевым конструктором.
-Или даже не нулевым, и передавать туда параметры.
+Конструктор с параметрами бессмысленен.
 
 А класс если и будет нужен, то можно вешать на него метку-интерфейс,
 так и отличать. Или просто сделать другой макрос.
@@ -113,7 +113,7 @@ https://github.com/nextjournal/beholder
 типа ~my_var.with(deref)~ лучше, чем ~my_var.deref()~
 
 
-* meta class для Var
+* TODO meta class для Var
 чтобы проксировать без deref
 
 Для IDeref это точно не нужно, т.к. может контракт какой-то нарушит,
@@ -135,7 +135,7 @@ https://github.com/nextjournal/beholder
 
 Может быть там только должен быть метод-миссинг?
 
-* разобраться с groovy.lang.Reference
+* DONE разобраться с groovy.lang.Reference
 
 может быть стоит делать final при var('cc', 'map')
 
@@ -143,6 +143,8 @@ https://github.com/nextjournal/beholder
 может быть из invoke() вызывать run()?
 
 или свой какой-то класс сделать
+
+перешли на класс вместо скрипта, наверное не актуально
 
 
 * почитать про DSL
@@ -164,7 +166,7 @@ https://docs.groovy-lang.org/latest/html/documentation/core-domain-specific-lang
 Сейчас похоже можно просто подложить другой конфиг.
 Но если нужно несколько конфигов?
 
-* fn
+* DONE fn
 
 #+begin_src groovy
   fn { it + 1 }
@@ -180,11 +182,15 @@ https://docs.groovy-lang.org/latest/html/documentation/core-domain-specific-lang
 
 { ... } as MyAbstractFn
 
-* трансформация
+не факт, что получится
+
+* DONE трансформация
 
 всем ifn заменить .call на .invoke.
 
-* trait
+в groovy 5 не будет такой фичи для call
+
+* DONE trait
 
 не нужно
 
@@ -217,7 +223,7 @@ https://docs.groovy-lang.org/latest/html/documentation/core-domain-specific-lang
 через InvokeHelper видимо, там есть такой метод для вызова груви методов
 
 
-* проставлять arglist и метаданые
+* TODO проставлять arglist и метаданые
 
 Как-то определять списко параметорв и формировать метаданные.
 
@@ -236,6 +242,8 @@ https://docs.groovy-lang.org/latest/html/documentation/core-domain-specific-lang
     def docstring = """
     """
 
+    def tag = "java.lang.String"
+
 
     def invoke() {
     }
@@ -246,7 +254,12 @@ https://docs.groovy-lang.org/latest/html/documentation/core-domain-specific-lang
 #+end_src
 
 
-* расширения и дженерики
+Можно даже не делать свой класс, а брать атрибуты через InvokeHelper.
+
+И наверное эти атрибуты должны быть статическими?
+
+
+* TODO расширения и дженерики
 
 #+begin_src groovy
   // вместо такого
@@ -276,8 +289,13 @@ https://docs.groovy-lang.org/latest/html/documentation/core-domain-specific-lang
   IFn mapv = var 'clojure.core', 'mapv' with deref
 #+end_src
 
-* проверки
+* TODO проверки
 
 проверять имя класса и пакет
 наверное уже в clj,
 но может быть и в груви что-то можно подкрутить
+
+* TODO перезагрузка
+
+как кидать исключение?
+там вроде были комменты в самом неймспейсе
