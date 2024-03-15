@@ -259,6 +259,18 @@ https://docs.groovy-lang.org/latest/html/documentation/core-domain-specific-lang
 И наверное эти атрибуты должны быть статическими?
 
 
+вот так работае, если добавить ~configuration.parameters = true~
+#+begin_src clojure
+  (->> gr-1
+       class
+       .getDeclaredMethods
+       (filter #(= "invoke" (.getName %)))
+       (map #(.getParameters %))
+       (map (fn [params]
+               (map #(-> % .getName symbol) params))))
+#+end_src
+
+
 * TODO расширения и дженерики
 
 #+begin_src groovy

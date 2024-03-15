@@ -1,6 +1,9 @@
 configuration.recompileGroovySource = true
 // configuration.minimumRecompilationInterval = 0
 
+// сохраняем имена параметров
+configuration.parameters = true
+
 withConfig(configuration) {
   imports {
     normal 'clojure.lang.IFn'
