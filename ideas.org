@@ -269,6 +269,8 @@ https://docs.groovy-lang.org/latest/html/documentation/core-domain-specific-lang
        (map #(.getParameters %))
        (map (fn [params]
                (map #(-> % .getName symbol) params))))
+
+  ;; нужно еще отдельно обрабатывать &
 #+end_src
 
 
