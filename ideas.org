@@ -242,6 +242,7 @@ https://docs.groovy-lang.org/latest/html/documentation/core-domain-specific-lang
     def docstring = """
     """
 
+    // или даже сразу класс писать вместо строки
     def tag = "java.lang.String"
 
 
