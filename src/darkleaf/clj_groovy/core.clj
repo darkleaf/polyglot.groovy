@@ -17,13 +17,3 @@
        ~(impl/-defclass* classname)
        ~(impl/-instantiate name classname)
        (var ~name))))
-
-(comment
-  (defobject foo)
-
-  (foo)
-
-  (defclass Static)
-
-  (Static/bar 2)
-  ,,,)
