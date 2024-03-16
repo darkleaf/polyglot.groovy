@@ -1,57 +1,32 @@
 (ns darkleaf.clj-groovy.core
   (:require
-   [criterium.core :as c]
-   [clojure.java.io :as io])
-  (:import
-   (groovy.lang GroovyClassLoader)
-   (groovy.ui GroovyMain)
-   (org.codehaus.groovy.control CompilerConfiguration)
-   (org.codehaus.groovy.runtime InvokerHelper)))
+    [darkleaf.clj-groovy.impl :as impl]))
 
-(set! *warn-on-reflection* true)
+(defmacro defclass* [name]
+  `(impl/-compile ~(str name)))
 
-(def ^CompilerConfiguration compiler-configuration
-  (let [cc     (CompilerConfiguration.)
-        config (-> "darkleaf/clj_groovy/config.groovy" io/resource slurp)]
-    (GroovyMain/processConfigScriptText config cc)
-    cc))
+;; deftype like
+(defmacro defclass [name]
+  (let [classname (impl/-name->class-name *ns* name)]
+    `(do
+       (defclass* ~classname)
+       (import ~classname)
+       ~(impl/-constructor name classname)
+       ~classname)))
 
-(def ^GroovyClassLoader class-loader
-  (let [cl (.. Thread currentThread getContextClassLoader)]
-    (GroovyClassLoader. cl compiler-configuration)))
-
-(defn instantiate [ns name]
-  (let [full-name (munge (str ns "." name))
-        klass     (.loadClass class-loader
-                              full-name
-                              ;; названия не говорят ничего
-                              #_lookupScriptFiles true
-                              ;; без false не будет перезагрузки
-                              #_preferClassOverScript false
-                              #_resolve true)]
-    (InvokerHelper/invokeNoArgumentsConstructorOf klass)))
-
-(defmacro defobject [klass-name]
-  `(def ~klass-name (instantiate *ns* '~klass-name)))
-
+(defmacro defobject [name]
+  (let [classname (impl/-name->class-name *ns* name)]
+    `(do
+       (defclass* ~classname)
+       ~(impl/-instantiate name classname)
+       (var ~name))))
 
 (comment
-  (defobject klass)
+  (defobject foo)
 
-  (defobject use-klass)
+  (foo)
 
-  (use-klass))
+  (defclass Static)
 
-#_
-(c/quick-bench
-    (example [1 2 3 4 5]))
-
-
-#_
-(defn example-clj [data]
-  (->> data
-       (map inc)
-       (map str)))
-#_
-(c/quick-bench
-    (example-clj [1 2 3 4 5]))
+  (Static/bar 2)
+  ,,,)

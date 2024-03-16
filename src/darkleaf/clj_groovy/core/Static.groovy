@@ -1,4 +1,4 @@
-package darkleaf.clj_groovy.core2
+package darkleaf.clj_groovy.core
 
 class Static {
   static Object foo(Object x) {
