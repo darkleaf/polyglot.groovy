@@ -25,4 +25,8 @@
   (defobject foo)
 
   (foo)
+
+  (defclass Static)
+
+  (Static/bar 2)
   ,,,)
