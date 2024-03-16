@@ -13,6 +13,13 @@
   (t/is (= [1 2 3] (.getArgs (->TestClass 1 2 3))))
   (t/is (= [1 2 3] (.getArgs (TestClass. 1 2 3)))))
 
+
+(g/defclass TestStaticClass)
+
+(t/deftest static-class-test
+  (t/is (= "ok" (TestStaticClass/foo))))
+
+
 (g/defobject test-object)
 
 (t/deftest object-test
