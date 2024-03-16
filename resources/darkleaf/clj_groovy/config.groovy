@@ -1,7 +1,3 @@
-configuration.recompileGroovySource = true
-// configuration.minimumRecompilationInterval = 0
-
-// сохраняем имена параметров
 configuration.parameters = true
 
 withConfig(configuration) {
@@ -14,8 +10,4 @@ withConfig(configuration) {
 
     normal 'groovy.transform.CompileStatic'
   }
-
-  // ast(groovy.transform.CompileStatic)
 }
-
-// https://docs.groovy-lang.org/latest/html/documentation/core-domain-specific-languages.html#_customizer_builder
