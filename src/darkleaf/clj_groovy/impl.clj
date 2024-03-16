@@ -72,9 +72,9 @@
 
         synchronized Class getCompiledClass(){
                 if(compiledClass == null)
-//			if(RT.booleanCast(COMPILE_FILES.deref()))
-//				compiledClass = RT.classForName(name);//loader.defineClass(name, bytecode);
-//			else
+//            if(RT.booleanCast(COMPILE_FILES.deref()))
+//                compiledClass = RT.classForName(name);//loader.defineClass(name, bytecode);
+//            else
                                 {
                                 loader = (DynamicClassLoader) LOADER.deref();
                                 compiledClass = loader.defineClass(name, bytecode, src);
