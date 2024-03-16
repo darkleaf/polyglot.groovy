@@ -1,8 +1,11 @@
 package darkleaf.clj_groovy.core_test
 
+@POJO
+@CompileStatic
 class test_call extends AFunction {
   static final IFn vector = var 'clojure.core', 'vector'
 
+  @CompileDynamic
   def invoke() {
     // darkleaf.clj_groovy.IFnExtension
     [
