@@ -53,8 +53,11 @@
 
 ;; todo: arglists
 (defn -constructor [name classname]
-  `(defn ~(symbol (str "->" name)) [~'& ~'args]
-     (InvokerHelper/invokeConstructorOf ~classname (object-array ~'args))))
+  (let [cname  (symbol (str "->" name))
+        params (with-meta '[& args]
+                 {:tag classname})]
+    `(defn ~cname ~params
+       (InvokerHelper/invokeConstructorOf ~classname (object-array ~'args)))))
 
 (defn -instantiate [name classname]
   `(def ~name (InvokerHelper/invokeNoArgumentsConstructorOf ~classname)))
