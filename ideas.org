@@ -304,6 +304,13 @@ https://docs.groovy-lang.org/latest/html/documentation/core-domain-specific-lang
   IFn mapv = var 'clojure.core', 'mapv' with deref
 #+end_src
 
+Вот так можно, и делать ничего не надо
+
+#+begin_src groovy
+  IFn mapv = (IFn) (var 'clojure.core', 'mapv' with deref)
+#+end_src
+
+
 * TODO проверки
 
 проверять имя класса и пакет
