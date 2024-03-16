@@ -59,6 +59,9 @@
 (defn -instantiate [name classname]
   `(def ~name (InvokerHelper/invokeNoArgumentsConstructorOf ~classname)))
 
+(defn -defclass* [name]
+  `(-compile ~(str name)))
+
 #_"
 скомпилит как обычно,
 хоть 2 класса, хоть скрипт
