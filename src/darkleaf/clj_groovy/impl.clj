@@ -15,19 +15,22 @@
 
 (set! *warn-on-reflection* true)
 
+(defn compiler-configuration [named-resource]
+  (let [cc     (CompilerConfiguration.)
+        config (-> named-resource io/resource slurp)]
+    (GroovyMain/processConfigScriptText config cc)
+    cc))
+
+(def default-compiler-configuration
+  (compiler-configuration "darkleaf/clj_groovy/config.groovy"))
+
 (defn- url ^URL [full-name]
   (-> full-name
       (str/replace \. \/)
       (str ".groovy")
       io/resource))
 
-(def ^:private ^CompilerConfiguration compiler-configuration
-  (let [cc     (CompilerConfiguration.)
-        config (-> "darkleaf/clj_groovy/config.groovy" io/resource slurp)]
-    (GroovyMain/processConfigScriptText config cc)
-    cc))
-
-(defn -compile [full-name]
+(defn -compile [full-name ^CompilerConfiguration compiler-configuration]
   (let [unit (CompilationUnit. compiler-configuration)
         su   (.addSource unit (url full-name))
         cb   (reify CompilationUnit$ClassgenCallback
@@ -58,8 +61,8 @@
 (defn -instantiate [name classname]
   `(def ~name (InvokerHelper/invokeNoArgumentsConstructorOf ~classname)))
 
-(defn -defclass* [name]
-  `(-compile ~(str name)))
+(defn -defclass* [name compiler-configuration]
+  `(-compile ~(str name) ~compiler-configuration))
 
 #_"
 скомпилит как обычно,
