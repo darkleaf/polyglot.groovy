@@ -21,10 +21,6 @@
       (str ".groovy")
       io/resource))
 
-(comment
-  (url "darkleaf.clj-groovy.compiler.foo")
-  ,,,)
-
 (def ^:private ^CompilerConfiguration compiler-configuration
   (let [cc     (CompilerConfiguration.)
         config (-> "darkleaf/clj_groovy/config.groovy" io/resource slurp)]
