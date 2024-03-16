@@ -3,6 +3,16 @@
    [darkleaf.clj-groovy.core :as g]
    [clojure.test :as t]))
 
+(set! *warn-on-reflection* true)
+
+(g/defclass TestClass)
+
+(t/deftest class-test
+  (t/is (= [] (.getArgs (->TestClass))))
+  (t/is (= [] (.getArgs (TestClass.))))
+  (t/is (= [1 2 3] (.getArgs (->TestClass 1 2 3))))
+  (t/is (= [1 2 3] (.getArgs (TestClass. 1 2 3)))))
+
 (g/defobject test-object)
 
 (t/deftest object-test
