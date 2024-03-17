@@ -4,6 +4,7 @@ withConfig(configuration) {
   imports {
     normal 'clojure.lang.IFn'
     normal 'clojure.lang.AFunction'
+    normal 'clojure.lang.ExceptionInfo'
 
     staticMember 'clojure.java.api.Clojure', 'var'
     staticMember 'clojure.java.api.Clojure', 'read'
