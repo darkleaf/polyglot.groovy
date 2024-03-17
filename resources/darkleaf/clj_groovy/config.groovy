@@ -11,4 +11,8 @@ withConfig(configuration) {
     normal 'groovy.transform.CompileStatic'
     normal 'groovy.transform.CompileDynamic'
   }
+
+  source(extensions: ['sgroovy']) {
+    ast(groovy.transform.CompileStatic)
+  }
 }
