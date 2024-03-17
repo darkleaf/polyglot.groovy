@@ -8,6 +8,15 @@
 
 Оно так-то в инкубаторе, но наверное ничего страшного.
 
+Смысл POJO - только не зависить от рантайма груви, а мы зависим.
+
+https://issues.apache.org/jira/browse/GROOVY-7492
+
+#+begin_quote
+This opens up some of Groovy's powerful transforms to the wider Java community.
+Groovy can effectively be used as a Lombok-style pre-processor for some Java classes.
+#+end_quote
+
 * надо разобраться как методы вызываются
 
 Eсли он реализует интерфейс, то неважно как он скомпилен, динамически или статически.
