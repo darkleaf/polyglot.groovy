@@ -32,6 +32,16 @@
     (->> extensions
          (some #(io/resource (str full-name %))))))
 
+(comment
+  ;; gen-interface
+  (.defineClass ^DynamicClassLoader (deref clojure.lang.Compiler/LOADER)
+                (str (:name options-map)) bytecode options)
+
+  ;; get-proxy-class
+  (. ^DynamicClassLoader (deref clojure.lang.Compiler/LOADER) (defineClass pname bytecode [super interfaces]))
+  ,,,)
+
+
 (defn -compile [full-name ^CompilerConfiguration compiler-configuration]
   (let [unit (CompilationUnit. compiler-configuration)
         su   (.addSource unit (url full-name))
@@ -40,7 +50,6 @@
                  (let [writer        ^ClassWriter writer
                        bytecode      (.toByteArray writer)
                        name          (.getName node)
-                       ;; todo: was syncronized
                        loader        ^DynamicClassLoader @Compiler/LOADER
                        compiledClass (.defineClass loader name bytecode nil)])))
         _         (.setClassgenCallback unit cb)
@@ -65,25 +74,3 @@
 
 (defn -defclass* [name compiler-configuration]
   `(-compile ~(str name) ~compiler-configuration))
-
-#_"
-скомпилит как обычно,
-хоть 2 класса, хоть скрипт
-
-
-
-синхронизированный!!!
-
-        synchronized Class getCompiledClass(){
-                if(compiledClass == null)
-//            if(RT.booleanCast(COMPILE_FILES.deref()))
-//                compiledClass = RT.classForName(name);//loader.defineClass(name, bytecode);
-//            else
-                                {
-                                loader = (DynamicClassLoader) LOADER.deref();
-                                compiledClass = loader.defineClass(name, bytecode, src);
-                                }
-                return compiledClass;
-        }
-
-"
