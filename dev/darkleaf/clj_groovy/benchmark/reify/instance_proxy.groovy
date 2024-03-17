@@ -2,8 +2,8 @@ package darkleaf.clj_groovy.benchmark.reify
 
 @CompileStatic
 class instance_proxy extends AFunction {
-  static final IFn P = var('darkleaf.clj-groovy.benchmark.reify', 'P')
-  static final Object onInterface = read(":on-interface")
+  static final IFn P = var 'darkleaf.clj-groovy.benchmark.reify', 'P'
+  static final Object onInterface = read ':on-interface'
 
   def invoke() {
     reify P, [
