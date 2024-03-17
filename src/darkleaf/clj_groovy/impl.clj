@@ -24,11 +24,13 @@
 (def default-compiler-configuration
   (compiler-configuration "darkleaf/clj_groovy/config.groovy"))
 
+(def ^:private extensions
+  [".groovy" #_".sgroovy"])
+
 (defn- url ^URL [full-name]
-  (-> full-name
-      (str/replace \. \/)
-      (str ".groovy")
-      io/resource))
+  (let [full-name (str/replace full-name \. \/)]
+    (->> extensions
+         (some #(io/resource (str full-name %))))))
 
 (defn -compile [full-name ^CompilerConfiguration compiler-configuration]
   (let [unit (CompilationUnit. compiler-configuration)
