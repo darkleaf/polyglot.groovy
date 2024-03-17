@@ -1,0 +1,233 @@
+* Заводная Кложа [Groovy Clojure]
+
+https://github.com/darkleaf/clj-groovy
+
+28 марта 2024
+Михаил Кузьмин
+
+Нанимаю в [[https://gmonit.ru][gmonit.ru]]
+
+* API
+
+#+begin_src clojure
+  ;; deftype like
+  (g/defclass MyClass)
+
+  ;; defn like
+  (g/defobject my-obj)
+#+end_src
+
+* История
+** Шаблонизаторы
+
+Эра [[https://htmx.org/][htmx]], [[https://hotwired.dev/][Hotwire]].
+
+- Нет зрелых шаблонизаторов
+  - уязвимости
+  - стандарты
+  - удобство
+- Java шаблонизаторы, selmer
+ - заточены на java подобный синтаксис
+   #+begin_src clojure
+     {:user/name "Mikhail"
+      :org/name  "GMonit"
+      :ru.hsl.gmonit.apm.awesome-package/name "..."
+      'foo/name  "..."
+      "name"     "..."}
+   #+end_src
+   #+begin_src erb
+     <%= model.:user/name %>
+     <%= model.:ru.hsl.gmonit.apm.awesome-package/name %>
+   #+end_src
+ - компиляция, кэши
+ - мешают разработке через REPL
+ - изобретают заново неймспейсы
+   когда есть функции и ~clojure.lang.Var~
+- шаблонизация текста
+ - multiline string literal
+   #+begin_src clojure
+     (defn greeting [name] """
+       Привет, <(name)>!
+       Хочешь "немного" кавычек?
+     """)
+   #+end_src
+
+- [[https://github.com/weavejester/hiccup][hiccup]]
+  заброшен
+- [[https://github.com/yogthos/Selmer][selmer]]
+  классический шаблонизатор, со всеми их проблемами
+- [[https://github.com/onionpancakes/chassis][chassis]]
+  перспективный, только html5
+
+
+Решение пока не выбрано
+
+** expression vs statement
+
+Бывают *полезные* алгоритмы, которые уже написаны на C подобном языке,
+и используют его на полную.
+
+- foo[x++]
+- foo[++x]
+- ранние возвраты (одобряю)
+- continue   в случайных местах
+- переменные в случайных местах
+
+Очень тяжело перепиывать алгоритмы с statament based на expression based язык.
+
+#+begin_src js
+  function (node) {
+    var fieldsUsed = 0
+    for (var fieldIdx = 0; fieldIdx < fieldCount; fieldIdx++) {
+
+      var fieldVal = node.fields[fieldsUsed++]
+      //                         __________^^
+      if (fieldVal === null) {
+        // ...
+        continue
+      }
+
+      var fieldName = fieldSpec.name
+      var fieldType = fieldSpec.type
+      // ...
+      decodedNode[fieldName] = fieldVal
+    }
+  }
+#+end_src
+
+#+begin_src clojure
+  (dotimes [fieldIdx fieldsCount]
+    (let [...]
+      (if (= fieldType "node")
+        (decodeNodeField decodedNode fieldSpec)
+        (let [fieldVal (nth nodeFields @fieldsUsed)
+              _        (vswap! fieldsUsed inc)]
+          (do
+            (when ...
+              (let ...
+                (if ...))))
+#+end_src
+
+Немного помогает ~<<-~
+#+begin_src clojure
+  (<<-
+   (let [...])
+   (if guard return)
+   (do side-effect)
+   (if guard return)
+   (for [...])
+   (doseq [...]))
+#+end_src
+
+Но volatile это не уберет
+
+** interop
+
+- ~gen-class~
+  требует компиляции,
+  хотя его можно сделать динамическим
+- ~proxy~
+  медленный
+- свои классы исключений
+
+Red Planet Labs
+- [[https://github.com/redplanetlabs/proxy-plus][proxy-plus]]
+- [[https://github.com/redplanetlabs/defexception][defexception]]
+
+* Groovy
+
+Dynamic, Static Compilation
+
+** @POJO
+https://issues.apache.org/jira/browse/GROOVY-7492
+
+#+begin_quote
+This opens up some of Groovy's powerful transforms to the wider Java community.
+Groovy can effectively be used as a Lombok-style pre-processor for some Java classes.
+#+end_quote
+
+
+** расширения
+
+** Декомпиляция
+
+* ClassLoader
+
+** GroovyClassLoader
+** DynamicClassLoader
+CompilationUnit
+
+* Расширения
+** скобочки великолепны
+
+#+begin_src java
+  obj.abc();
+  obj.qwe();
+  CoolHelper.xyz(obj); // !
+#+end_src
+
+#+begin_src clojure
+  (abc obj)
+  (qwe obj)
+  (CoolHelper/xyz obj) ;; !
+#+end_src
+
+** данные и функции отдельно
+#+begin_src clojure
+  {:user/name "Mikhail"
+   :org/name  "GMonit"
+   :ru.hsl.gmonit.apm.awesome-package/name "..."
+   'foo/name  "..."
+   "name"     "..."}
+#+end_src
+
+#+begin_src erb
+  <%= model.:user/name %>
+  <%= model.:ru.hsl.gmonit.apm.awesome-package/name %>
+#+end_src
+
+#+begin_src groovy
+  def userName    = (IFn) (read ':user/name')
+  def packageName = (IFn) (read ':ru.hsl.gmonit.apm.awesome-package/name')
+
+  model.with(userName)
+  model.with(packageName)
+#+end_src
+
+** with & ->
+
+#+begin_src clojure
+  (-> 1
+      (vector 2 3)
+      (conj 4))
+#+end_src
+
+#+begin_src groovy
+  1
+    .with { vector.invoke(it) }
+    .with { conj.invoke(it) }
+#+end_src
+
+#+begin_src groovy
+  1
+    .with(vector)
+    .with(conj)
+#+end_src
+
+** rwith & ->>
+** tap & doto
+
+* Demo
+
+- тесты
+- бенчмарки
+- реализация
+
+* дальнейшие шаги
+
+- компиляция
+  компилируем неймспейс, компилируются и груви классы
+- Kotlin вместо Groovy
+  есть экспериментальный Scripting API
+  но все довольно запутано
+- ideas.org
