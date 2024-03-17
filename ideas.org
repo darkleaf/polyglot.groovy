@@ -186,3 +186,6 @@ https://groovy-lang.org/dsls.html#_source_aware_customizer_2
 #+end_src
 
 ~(or (RT/loadClassForName pname) ,,,)~
+
+
+* TODO написать тест для tap
