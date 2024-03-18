@@ -162,7 +162,7 @@ https://github.com/clj-python/libpython-clj
 * TODO defclasses
 
 #+begin_src clojure
-  (g/defclasses "FileName") ;; именно строкой
+  (g/defclasses "FileName") ;; именно строкой, а зачем? оно и так class_es
 #+end_src
 
 загружать все классы
