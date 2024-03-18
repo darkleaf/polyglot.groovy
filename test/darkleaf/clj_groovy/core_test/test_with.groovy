@@ -1,6 +1,5 @@
 package darkleaf.clj_groovy.core_test
 
-@CompileStatic
 class test_with extends AFunction {
   static final IFn vector = var 'clojure.core', 'vector'
 

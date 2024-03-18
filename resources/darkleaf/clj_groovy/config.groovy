@@ -9,11 +9,12 @@ withConfig(configuration) {
     staticMember 'clojure.java.api.Clojure', 'var'
     staticMember 'clojure.java.api.Clojure', 'read'
 
+    normal 'groovy.transform.stc.POJO'
     normal 'groovy.transform.CompileStatic'
     normal 'groovy.transform.CompileDynamic'
   }
 
-  source(extensions: ['sgroovy']) {
-    ast(groovy.transform.CompileStatic)
-  }
+  ast(groovy.transform.CompileStatic)
 }
+
+// https://groovy-lang.org/dsls.html#_customizer_builder

@@ -1,6 +1,5 @@
 package darkleaf.clj_groovy.benchmark.collection
 
-@CompileStatic
 class gr_2 extends AFunction {
   static final IFn deref = var 'clojure.core', 'deref'
 

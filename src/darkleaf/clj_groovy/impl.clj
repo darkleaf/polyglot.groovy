@@ -25,7 +25,8 @@
   (compiler-configuration "darkleaf/clj_groovy/config.groovy"))
 
 (def ^:private extensions
-  [".groovy" ".sgroovy"])
+  [".groovy" ".gvy" "gy"
+   ".sgroovy" ".dgroovy" ".sg" ".dg"])
 
 (defn- url ^URL [full-name]
   (let [full-name (str/replace full-name \. \/)]
