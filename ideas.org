@@ -128,11 +128,14 @@ https://github.com/clj-python/libpython-clj
 
 
 Можно даже не делать свой класс, а брать атрибуты через InvokeHelper.
-
 И наверное эти атрибуты должны быть статическими?
 
+Можно интерфейс сделать с дефолтными методами. И доставать мету, не только для функций.
 
-вот так работае, если добавить ~configuration.parameters = true~
+С другой стороны, может быть мету вешать прямо на var в clj файле?
+
+
+вот так работает, если добавить ~configuration.parameters = true~
 #+begin_src clojure
   (->> gr-1
        class
@@ -167,6 +170,12 @@ https://github.com/clj-python/libpython-clj
 
 https://groovy-lang.org/dsls.html#_source_aware_customizer_2
 
+
+стоит по умолчанию компилить статически,
+проверить аннтоацию @CompileDynamyc, будет ли рабоать.
+Если нет, то сделать ~.dgroovy~, а ~.groovy~ будет статическим.
+
+
 * compile
 
 когда компилим кложовый неймспейс - компилим и груви.
@@ -189,3 +198,13 @@ https://groovy-lang.org/dsls.html#_source_aware_customizer_2
 
 
 * TODO написать тест для tap
+
+* TODO defclasses
+
+#+begin_src clojure
+  (g/defclasses "FileName") ;; именно строкой
+#+end_src
+
+загружать все классы
+
+делать ли конструкторы?
