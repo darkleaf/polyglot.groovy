@@ -14,7 +14,9 @@ withConfig(configuration) {
     normal 'groovy.transform.CompileDynamic'
   }
 
-  ast(groovy.transform.CompileStatic)
+  source(extensions: ['groovy', 'gvy', 'gy', 'sgroovy', 'sg']) {
+    ast(groovy.transform.CompileStatic)
+  }
 }
 
 // https://groovy-lang.org/dsls.html#_customizer_builder
