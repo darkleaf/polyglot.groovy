@@ -1,5 +1,7 @@
 * Заводная Кложа [Groovy Clojure]
 
+или Groovy вместо deftype
+
 https://github.com/darkleaf/clj-groovy
 
 28 марта 2024
@@ -9,13 +11,19 @@ https://github.com/darkleaf/clj-groovy
 
 * API
 
+Все работает подобно ~deftype~ или ~defrecord~.
+Со всеми их особенностями.
+
 #+begin_src clojure
-  ;; deftype like
   (g/defclass MyClass)
 
   (->MyClass arg)
+#+end_src
 
-  ;; defn like
+Можно сразу инстанцировать объект,
+например фукнцию или реализацию протокола.
+
+#+begin_src clojure
   (g/defobject my-obj)
 
   (my-obj arg) ;; if IFn
@@ -27,10 +35,18 @@ https://github.com/darkleaf/clj-groovy
 
 Эра [[https://htmx.org/][htmx]], [[https://hotwired.dev/][Hotwire]].
 
+В Clojure сейчас все плохо с шаблонизацией текста и html.
+Только-только начали появляться проекты, вроде [[https://github.com/onionpancakes/chassis][chassis]].
+
+Почему бы вместо шаблонизатора не использовать целый язык? 😁
+
+** Шаблонизаторы (подробно)
+
 - Нет зрелых шаблонизаторов
   - уязвимости
   - стандарты
   - удобство
+
 - Java шаблонизаторы, selmer
  - заточены на java подобный синтаксис (dot notation),
    а мапы могут содержать, например ключи с неймспейсами.
@@ -49,6 +65,7 @@ https://github.com/darkleaf/clj-groovy
  - мешают разработке через REPL
  - изобретают заново неймспейсы
    когда есть функции и ~clojure.lang.Var~
+
 - шаблонизация текста
  - multiline string literal
    #+begin_src clojure
@@ -64,7 +81,6 @@ https://github.com/darkleaf/clj-groovy
   классический шаблонизатор, со всеми их проблемами
 - [[https://github.com/onionpancakes/chassis][chassis]]
   перспективный, только html5
-
 
 Решение пока не выбрано
 
@@ -127,13 +143,15 @@ https://github.com/darkleaf/clj-groovy
 
 Но volatile это не уберет
 
-** interop
+** Java interop
 
 - ~gen-class~
   требует компиляции,
   хотя его можно сделать динамическим
+
 - ~proxy~
   медленный
+
 - свои классы исключений
 
 Red Planet Labs
@@ -142,28 +160,91 @@ Red Planet Labs
 
 * Groovy
 
-Dynamic, Static Compilation
+- похож на Java
 
-** @POJO
-https://issues.apache.org/jira/browse/GROOVY-7492
+- никак не умрет
 
-#+begin_quote
-This opens up some of Groovy's powerful transforms to the wider Java community.
-Groovy can effectively be used as a Lombok-style pre-processor for some Java classes.
-#+end_quote
+- выпускает новые релизы несколько раз в месяц
+  5.0.0-alpha
 
+- поддерживает новые Java фичи
+  вроде рекордов и лямбд SAM
 
-** расширения
+- заточен под встраивание
 
-** Декомпиляция
+- удобное API компилятора
+
+- компилируется, не интерпертируется
+
+- @CompileStatic
+  убирает непрямой вызов методов
+
+- [[https://issues.apache.org/jira/browse/GROOVY-7492][@POJO]]
+
+  #+begin_quote
+    This opens up some of Groovy's powerful transforms to the wider Java community.
+    Groovy can effectively be used as a Lombok-style pre-processor for some Java classes.
+  #+end_quote
+
+- runtime metaprogramming
+  - method missing
+  - DSL
+
+- compile-time metaprogramming
+  - @InheritConstructors
+  - @Delegate
+  - API для AST преобразований
+
+- операторы
+
+  #+begin_src groovy
+    myIFn.invoke(a, b, c)
+    ;; vs
+    myIFn(a, b, c)
+  #+end_src
+
+- добавление методов к любому классу
+
+  #+begin_src groovy
+    obj.with { inc.invoke(it) }
+    ;; vs
+    obj.with(inc)
+  #+end_src
 
 * ClassLoader
 
 ** GroovyClassLoader
-** DynamicClassLoader
-CompilationUnit
 
-* Расширения
+- начинал с него
+- компилирует скрипты
+  и классы
+- можно реализовать интерфейс
+- *нельзя* ~(import MySuperClass)~
+- *нельзя* import в другом скрипте
+- только объекты
+- или работать с классами через рефлексию
+
+** DynamicClassLoader
+
+#+begin_src clojure
+  @Compiler/LOADER
+#+end_src
+
+- позволяет загружать любой байткод
+  по аналогии с deftype и т.п.
+- *можно* ~(import MySuperClass)~
+- *можно* import в другом классе
+- и не нужна рефлексия
+
+- разобрался с Groovy CompilationUnit
+  получаю байткод в виде байтов
+
+* Интероп с Clojure
+
+clojure.java.api.Clojure
+- var
+- read
+
 ** скобочки великолепны
 
 #+begin_src java
@@ -179,6 +260,7 @@ CompilationUnit
 #+end_src
 
 ** данные и функции отдельно
+
 #+begin_src clojure
   {:user/name "Mikhail"
    :org/name  "GMonit"
@@ -196,8 +278,8 @@ CompilationUnit
   def userName    = (IFn) (read ':user/name')
   def packageName = (IFn) (read ':ru.hsl.gmonit.apm.awesome-package/name')
 
-  model.with(userName)
-  model.with(packageName)
+  model.with(userName)     // расширение
+  model.with(packageName)  // расширение
 #+end_src
 
 ** with & ->
@@ -210,13 +292,7 @@ CompilationUnit
 
 #+begin_src groovy
   1
-    .with { vector.invoke(it) }
-    .with { conj.invoke(it) }
-#+end_src
-
-#+begin_src groovy
-  1
-    .with(vector)
+    .with(vector, 2, 3) // vector.invoke(1, 2, 3)
     .with(conj)
 #+end_src
 
@@ -226,29 +302,50 @@ CompilationUnit
 * Java
 
 #+begin_src java
-  threading(obj)
-      .first(vector, 2, 3, 4)
-      .last(map, inc)
+  chain(obj)
+      .with(vector, 2, 3)
+      .rwith(map, inc)
+      .tap(prn)
       .result()
 #+end_src
 
 * Demo
 
 - тесты
+  - исключения
 - бенчмарки
+  - протоколы
 - реализация
 
-* дальнейшие шаги
+* Другие языки вместо Groovy
 
-- компиляция
-  компилируем неймспейс, компилируются и груви классы
-- Kotlin вместо Groovy
+- Kotlin
   Экспериментальный Scripting API не подойдет,
   нужно использовать именно компилятор
   и получать байт-код.
 
-  API довольно запутанное.
-- Java вместо Groovy
-  JOOR содержит хороший пример.
+  API использует файлы на реальной файловой системе.
+  И нельзя использовать [[https://github.com/google/jimfs][jimfs]].
+  - [[https://github.com/casid/jte/blob/main/jte-kotlin/src/main/java/gg/jte/compiler/kotlin/KotlinClassCompiler.java][jte kotlin compiler]]
+  - [[https://stackoverflow.com/questions/45888068/how-do-i-run-tests-compiling-a-kotlin-file-in-memory-and-check-the-result][stack overflow]]
+
+- Java
   Можно будет сделать интеграцию с JOOQ, и динамически подгружать измененные сущности.
+
+  примеры
+  + [[https://github.com/sourcebuddy/sourcebuddy][sourcebuddy]]
+  + [[https://github.com/jOOQ/jOOR/blob/main/jOOR/src/main/java/org/joor/Compile.java][JOOR]]
+
+- [[https://github.com/janino-compiler/janino][Janino]]
+  Janino is a super-small, super-fast Java™ compiler.
+
+  Простое API. Легко получить байты для DynamicClassLoader.
+  Не все фичи Java поддерживаются.
+
+* Дальнейшие шаги
+
+- название
+- компиляция
+  компилируем неймспейс, компилируются и груви классы
+- примеры
 - ideas.org
