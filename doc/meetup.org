@@ -13,8 +13,13 @@ https://github.com/darkleaf/clj-groovy
   ;; deftype like
   (g/defclass MyClass)
 
+  (->MyClass arg)
+
   ;; defn like
   (g/defobject my-obj)
+
+  (my-obj arg) ;; if IFn
+  (protocol/method my-obj) ;; if Protocol
 #+end_src
 
 * История
@@ -27,7 +32,8 @@ https://github.com/darkleaf/clj-groovy
   - стандарты
   - удобство
 - Java шаблонизаторы, selmer
- - заточены на java подобный синтаксис
+ - заточены на java подобный синтаксис (dot notation),
+   а мапы могут содержать, например ключи с неймспейсами.
    #+begin_src clojure
      {:user/name "Mikhail"
       :org/name  "GMonit"
@@ -217,6 +223,15 @@ CompilationUnit
 ** rwith & ->>
 ** tap & doto
 
+* Java
+
+#+begin_src java
+  threading(obj)
+      .first(vector, 2, 3, 4)
+      .last(map, inc)
+      .result()
+#+end_src
+
 * Demo
 
 - тесты
@@ -228,9 +243,12 @@ CompilationUnit
 - компиляция
   компилируем неймспейс, компилируются и груви классы
 - Kotlin вместо Groovy
-  есть экспериментальный Scripting API
-  но все довольно запутано
+  Экспериментальный Scripting API не подойдет,
+  нужно использовать именно компилятор
+  и получать байт-код.
+
+  API довольно запутанное.
 - Java вместо Groovy
   JOOR содержит хороший пример.
-  Можно будет сделать интеграцию с JOOQ, и динамически подгружать измененные сущности
+  Можно будет сделать интеграцию с JOOQ, и динамически подгружать измененные сущности.
 - ideas.org
