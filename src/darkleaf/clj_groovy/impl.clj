@@ -33,16 +33,6 @@
     (->> extensions
          (some #(io/resource (str full-name %))))))
 
-(comment
-  ;; gen-interface
-  (.defineClass ^DynamicClassLoader (deref clojure.lang.Compiler/LOADER)
-                (str (:name options-map)) bytecode options)
-
-  ;; get-proxy-class
-  (. ^DynamicClassLoader (deref clojure.lang.Compiler/LOADER) (defineClass pname bytecode [super interfaces]))
-  ,,,)
-
-
 (defn -compile [full-name ^CompilerConfiguration compiler-configuration]
   (let [unit (CompilationUnit. compiler-configuration)
         su   (.addSource unit (url full-name))
