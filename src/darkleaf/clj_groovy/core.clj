@@ -10,23 +10,17 @@
   (impl/compiler-configuration named-resource))
 
 ;; deftype like
-(defmacro defclass
-  ([name]
-   `(defclass ~name impl/default-compiler-configuration))
-  ([name compiler-configuration]
-   (let [classname (impl/-name->class-name *ns* name)]
-     `(do
-        ~(impl/-defclass* classname compiler-configuration)
-        (import ~classname)
-        ~(impl/-constructor name classname)
-        ~classname))))
+(defmacro defclass [name & {:as opts}]
+  (let [classname (impl/-name->class-name *ns* name)]
+    `(do
+       ~(impl/-defclass* classname opts)
+       (import ~classname)
+       ~(impl/-constructor name classname)
+       ~classname)))
 
-(defmacro defobject
-  ([name]
-   `(defobject ~name impl/default-compiler-configuration))
-  ([name compiler-configuration]
-   (let [classname (impl/-name->class-name *ns* name)]
-     `(do
-        ~(impl/-defclass* classname compiler-configuration)
-        ~(impl/-instantiate name classname)
-        (var ~name)))))
+(defmacro defobject [name & {:as opts}]
+  (let [classname (impl/-name->class-name *ns* name)]
+    `(do
+       ~(impl/-defclass* classname opts)
+       ~(impl/-instantiate name classname)
+       (var ~name))))

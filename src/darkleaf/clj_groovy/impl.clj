@@ -33,8 +33,14 @@
     (->> extensions
          (some #(io/resource (str full-name %))))))
 
-(defn -compile [full-name ^CompilerConfiguration compiler-configuration]
-  (let [unit      (CompilationUnit. compiler-configuration)
+(defn -compile [full-name opts]
+  (let [compiler-configuration
+        ^CompilerConfiguration
+        (get opts
+             :compiler-configuration
+             default-compiler-configuration)
+
+        unit      (CompilationUnit. compiler-configuration)
         su        (.addSource unit (url full-name))
         cb        (reify CompilationUnit$ClassgenCallback
                     (call [_ writer node]
@@ -64,5 +70,5 @@
 (defn -instantiate [name classname]
   `(def ~name (new ~classname)))
 
-(defn -defclass* [name compiler-configuration]
-  `(-compile ~(str name) ~compiler-configuration))
+(defn -defclass* [name opts]
+  `(-compile ~(str name) ~opts))
