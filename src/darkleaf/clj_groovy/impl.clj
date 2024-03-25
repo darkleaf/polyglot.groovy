@@ -34,15 +34,15 @@
          (some #(io/resource (str full-name %))))))
 
 (defn -compile [full-name ^CompilerConfiguration compiler-configuration]
-  (let [unit (CompilationUnit. compiler-configuration)
-        su   (.addSource unit (url full-name))
-        cb   (reify CompilationUnit$ClassgenCallback
-               (call [_ writer node]
-                 (let [writer        ^ClassWriter writer
-                       bytecode      (.toByteArray writer)
-                       name          (.getName node)
-                       loader        ^DynamicClassLoader @Compiler/LOADER
-                       compiledClass (.defineClass loader name bytecode nil)])))
+  (let [unit      (CompilationUnit. compiler-configuration)
+        su        (.addSource unit (url full-name))
+        cb        (reify CompilationUnit$ClassgenCallback
+                    (call [_ writer node]
+                      (let [writer        ^ClassWriter writer
+                            bytecode      (.toByteArray writer)
+                            name          (.getName node)
+                            loader        ^DynamicClassLoader @Compiler/LOADER
+                            compiledClass (.defineClass loader name bytecode nil)])))
         _         (.setClassgenCallback unit cb)
         goalPhase Phases/CLASS_GENERATION
         _         (.compile unit goalPhase)]))
