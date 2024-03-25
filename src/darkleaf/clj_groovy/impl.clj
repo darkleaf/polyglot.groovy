@@ -53,6 +53,7 @@
     (symbol (str ns-part "." name))))
 
 ;; todo: arglists
+;; todo?: remove reflection
 (defn -constructor [name classname]
   (let [cname  (symbol (str "->" name))
         params (with-meta '[& args]
@@ -61,7 +62,7 @@
        (InvokerHelper/invokeConstructorOf ~classname (object-array ~'args)))))
 
 (defn -instantiate [name classname]
-  `(def ~name (InvokerHelper/invokeNoArgumentsConstructorOf ~classname)))
+  `(def ~name (new ~classname)))
 
 (defn -defclass* [name compiler-configuration]
   `(-compile ~(str name) ~compiler-configuration))
