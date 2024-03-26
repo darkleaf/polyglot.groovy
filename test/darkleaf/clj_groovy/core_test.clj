@@ -20,6 +20,13 @@
   (t/is (= "ok" (TestStaticClass/foo))))
 
 
+(g/defclass A)
+(g/defclass B)
+
+(t/deftest class-usage-test
+  (t/is (= "A#a()" (.b (B.)))))
+
+
 (g/defobject test-object)
 
 (t/deftest object-test
