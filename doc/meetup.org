@@ -1,6 +1,6 @@
 * Заводная Кложа [Groovy Clojure]
 
-или Groovy вместо deftype
+или Groovy вместо deftype, proxy и gen-class
 
 https://github.com/darkleaf/clj-groovy
 
@@ -15,6 +15,7 @@ https://github.com/darkleaf/clj-groovy
 Со всеми их особенностями.
 
 #+begin_src clojure
+  ;; MyClass.groovy
   (g/defclass MyClass)
 
   (->MyClass arg)
@@ -24,6 +25,7 @@ https://github.com/darkleaf/clj-groovy
 например фукнцию или реализацию протокола.
 
 #+begin_src clojure
+  ;; my_obj.groovy
   (g/defobject my-obj)
 
   (my-obj arg) ;; if IFn
@@ -166,6 +168,9 @@ Red Planet Labs
 
 * Groovy
 
+Сначала расскажу немного про Groovy, а уже потом,
+про способы его использования из Clojure.
+
 - похож на Java
 
 - никак не умрет
@@ -184,6 +189,7 @@ Red Planet Labs
 
 - @CompileStatic
   убирает непрямой вызов методов
+  methodMissing, MetaClass
 
 - [[https://issues.apache.org/jira/browse/GROOVY-7492][@POJO]]
 
@@ -216,6 +222,7 @@ Red Planet Labs
   #+end_src
 
 - добавление методов к любому классу
+  через класс-расширение
 
   #+begin_src groovy
     obj.with { inc.invoke(it) }
@@ -224,6 +231,30 @@ Red Planet Labs
   #+end_src
 
   работает с @CompileStatic
+
+- [[https://groovy-lang.org/groovy-dev-kit.html][The Groovy Development Kit]]
+  Миллиард методов к стандартной библиотеке
+
+  #+begin_src groovy
+    def listOfMaps = [['a': 11, 'b': 12], ['a': 21, 'b': 22]]
+    listOfMaps.a  // GPath
+    listOfMaps*.a // spread dot notation
+  #+end_src
+
+  #+begin_src groovy
+    new File(baseDir, 'haiku.txt').eachLine { line ->
+      println line
+    }
+  #+end_src
+
+- [[https://groovy-lang.org/using-ginq.html][GINQ a.k.a. Groovy-Integrated Query]]
+
+  LINQ в Groovy
+
+  #+begin_src groovy
+    from n in [0, 1, 2]
+    select n
+  #+end_src
 
 - @OperatorRename
   Groovy 5 alpha
@@ -239,18 +270,23 @@ Red Planet Labs
     }
   #+end_src
 
-* ClassLoader
+* Интеграция в Clojure
+
+[[https://groovy-lang.org/integrating.html][Integrating Groovy into applications]]
 
 ** GroovyClassLoader
 
 - начинал с него
 - компилирует скрипты
   и классы
-- можно реализовать интерфейс
-- *нельзя* ~(import MySuperClass)~
+- можно реализовать интерфейс или абстракный класс
+  clojure протоколы,
+  абстракции из библиотек,
+  но не из других groovy скриптов
+- *нельзя* ~(import MyGroovyClass)~
 - *нельзя* import в другом скрипте
 - только объекты
-- или работать с классами через рефлексию
+- или работать с классами, как с объектами, через рефлексию
 
 ** DynamicClassLoader
 
@@ -259,8 +295,8 @@ Red Planet Labs
 #+end_src
 
 - позволяет загружать любой байткод
-  так работает deftype и т.п.
-- *можно* ~(import MySuperClass)~
+  так работает deftype, reify, и т.п.
+- *можно* ~(import MyGroovyClass)~
 - *можно* import в другом классе
 - и не нужна рефлексия
 
@@ -277,7 +313,7 @@ clojure.java.api.Clojure
 
 #+begin_src
   (-> 1 (vector 2 3) (conj 4))
-  1.with { vector.invoke(it, 2, 3) }.with { conj.invoke(it) }
+  1.with { vector.invoke(it, 2, 3) }.with { conj.invoke(it) } // groovy
   1.with(vector, 2, 3).with(conj) // расширение
 #+end_src
 
@@ -309,7 +345,8 @@ clojure.java.api.Clojure
 
 * Java
 
-В Java не получится расширить Object, и придется делать явно:
+Если бы использовали Java вместо Groovy, то пришлось бы делать явно,
+т.к. нельзя добавить методы в Object:
 
 #+begin_src java
   chain(obj)
