@@ -38,8 +38,13 @@ https://github.com/darkleaf/clj-groovy
 Эра [[https://htmx.org/][htmx]], [[https://hotwired.dev/][Hotwire]].
 
 В Clojure сейчас все плохо с шаблонизацией текста и html.
-Только-только начали появляться проекты, вроде [[https://github.com/onionpancakes/chassis][chassis]],
-или ~#html~ в squint.
+Только-только начали появляться проекты, вроде [[https://github.com/onionpancakes/chassis][chassis]].
+
+Но я думаю, что будущее за ~#html~, как в squint
+
+#+begin_src clojure
+  #html [:div "Hello"]
+#+end_src
 
 Почему бы вместо шаблонизатора не использовать полноценный язык? 😁
 
@@ -326,6 +331,8 @@ clojure.java.api.Clojure
    'foo/name  "..."
    "name"     "..."}
 #+end_src
+
+dot notation не подходит:
 
 #+begin_src erb
   <%= model.:user/name %>
