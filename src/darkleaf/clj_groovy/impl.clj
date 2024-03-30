@@ -24,6 +24,9 @@
 (def default-compiler-configuration
   (compiler-configuration "darkleaf/clj_groovy/config.groovy"))
 
+#_
+(.getScriptExtensions  default-compiler-configuration)
+
 (def ^:private extensions
   [".groovy" ".gvy" "gy"
    ".sgroovy" ".dgroovy" ".sg" ".dg"])
