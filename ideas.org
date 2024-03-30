@@ -1,5 +1,12 @@
 * Design
 
+** upd
+
+#+begin_src clojure
+  (g/load) ;; с тем же именем, что и clj
+  (g/load "file")
+#+end_src
+
 ** compilation unit
 Он про то, что есть директория или набор файлов,
 и нужно их скомпилить.
