@@ -3,7 +3,6 @@
    [clojure.java.io :as io]
    [clojure.string :as str])
   (:import
-   (java.net URL)
    (clojure.lang Compiler DynamicClassLoader)
    (org.codehaus.groovy.runtime InvokerHelper)
    (org.codehaus.groovy.control CompilerConfiguration
@@ -24,18 +23,6 @@
 (def default-compiler-configuration
   (compiler-configuration "darkleaf/polyglot/groovy/config.groovy"))
 
-#_
-(.getScriptExtensions  default-compiler-configuration)
-
-(def ^:private extensions
-  [".groovy" ".gvy" "gy"
-   ".sgroovy" ".dgroovy" ".sg" ".dg"])
-
-(defn- url ^URL [full-name]
-  (let [full-name (str/replace full-name \. \/)]
-    (->> extensions
-         (some #(io/resource (str full-name %))))))
-
 (defn -compile [full-name opts]
   (let [compiler-configuration
         ^CompilerConfiguration
@@ -44,7 +31,8 @@
              default-compiler-configuration)
 
         unit      (CompilationUnit. compiler-configuration)
-        su        (.addSource unit (url full-name))
+        url       (.. unit getClassLoader getResourceLoader (loadGroovySource full-name))
+        su        (.addSource unit url)
         cb        (reify CompilationUnit$ClassgenCallback
                     (call [_ writer node]
                       (let [writer        ^ClassWriter writer
