@@ -1,10 +1,6 @@
 (ns darkleaf.polyglot.groovy.core
   (:require
-    [clojure.java.io :as io]
-    [darkleaf.polyglot.groovy.impl :as impl])
-  (:import
-   (groovy.ui GroovyMain)
-   (org.codehaus.groovy.control CompilerConfiguration)))
+    [darkleaf.polyglot.groovy.impl :as impl]))
 
 (defn compiler-configuration [named-resource]
   (impl/compiler-configuration named-resource))
