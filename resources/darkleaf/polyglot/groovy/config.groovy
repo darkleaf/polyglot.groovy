@@ -1,7 +1,7 @@
 configuration.parameters = true
 
-configuration.scriptExtensions = [".groovy", ".gvy", "gy",
-                                  ".sgroovy", ".dgroovy", ".sg", ".dg"]
+configuration.scriptExtensions = ['groovy', 'gvy', 'gy',
+                                  'sgroovy', 'dgroovy', 'sg', 'dg']
 
 withConfig(configuration) {
   imports {
