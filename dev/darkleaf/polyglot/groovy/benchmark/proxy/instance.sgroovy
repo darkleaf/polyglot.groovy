@@ -1,0 +1,11 @@
+package darkleaf.polyglot.groovy.benchmark.proxy
+
+class instance extends AFunction {
+  def invoke() {
+    new AFunction() {
+      def invoke() {
+        42
+      }
+    }
+  }
+}
