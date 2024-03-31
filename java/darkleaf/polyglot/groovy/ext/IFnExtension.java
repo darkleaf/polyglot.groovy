@@ -1,4 +1,4 @@
-package darkleaf.polyglot.groovy;
+package darkleaf.polyglot.groovy.ext;
 
 import clojure.lang.IFn;
 
