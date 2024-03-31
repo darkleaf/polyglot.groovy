@@ -29,25 +29,25 @@
   (let [url (.. unit getClassLoader getResourceLoader (loadGroovySource full-name))]
     (.addSource unit url)))
 
+(defn- class-gen ^CompilationUnit$ClassgenCallback []
+  (reify CompilationUnit$ClassgenCallback
+    (call [_ writer node]
+      (let [writer        ^ClassWriter writer
+            bytecode      (.toByteArray writer)
+            name          (.getName node)
+            loader        ^DynamicClassLoader @Compiler/LOADER
+            compiledClass (.defineClass loader name bytecode nil)]))))
+
 (defn -compile [full-name opts]
   (let [compiler-configuration
         ^CompilerConfiguration
         (get opts
              :compiler-configuration
-             default-compiler-configuration)
-
-        cnr (DynamicClassNodeResolver.)
-        cc  (reify CompilationUnit$ClassgenCallback
-              (call [_ writer node]
-                (let [writer        ^ClassWriter writer
-                      bytecode      (.toByteArray writer)
-                      name          (.getName node)
-                      loader        ^DynamicClassLoader @Compiler/LOADER
-                      compiledClass (.defineClass loader name bytecode nil)])))]
+             default-compiler-configuration)]
     (doto (CompilationUnit. compiler-configuration)
       (add-source full-name)
-      (.setClassNodeResolver cnr)
-      (.setClassgenCallback cc)
+      (.setClassNodeResolver (DynamicClassNodeResolver.))
+      (.setClassgenCallback (class-gen))
       (.compile Phases/CLASS_GENERATION))))
 
 (defn -name->class-name [ns name]
