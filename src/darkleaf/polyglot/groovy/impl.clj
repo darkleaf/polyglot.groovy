@@ -25,6 +25,10 @@
 (def default-compiler-configuration
   (compiler-configuration "darkleaf/polyglot/groovy/config.groovy"))
 
+(defn- add-source [^CompilationUnit unit full-name]
+  (let [url (.. unit getClassLoader getResourceLoader (loadGroovySource full-name))]
+    (.addSource unit url)))
+
 (defn -compile [full-name opts]
   (let [compiler-configuration
         ^CompilerConfiguration
@@ -32,20 +36,19 @@
              :compiler-configuration
              default-compiler-configuration)
 
-        unit      (CompilationUnit. compiler-configuration)
-        _         (.setClassNodeResolver unit (DynamicClassNodeResolver.))
-        url       (.. unit getClassLoader getResourceLoader (loadGroovySource full-name))
-        su        (.addSource unit url)
-        cb        (reify CompilationUnit$ClassgenCallback
-                    (call [_ writer node]
-                      (let [writer        ^ClassWriter writer
-                            bytecode      (.toByteArray writer)
-                            name          (.getName node)
-                            loader        ^DynamicClassLoader @Compiler/LOADER
-                            compiledClass (.defineClass loader name bytecode nil)])))
-        _         (.setClassgenCallback unit cb)
-        goalPhase Phases/CLASS_GENERATION
-        _         (.compile unit goalPhase)]))
+        cnr (DynamicClassNodeResolver.)
+        cc  (reify CompilationUnit$ClassgenCallback
+              (call [_ writer node]
+                (let [writer        ^ClassWriter writer
+                      bytecode      (.toByteArray writer)
+                      name          (.getName node)
+                      loader        ^DynamicClassLoader @Compiler/LOADER
+                      compiledClass (.defineClass loader name bytecode nil)])))]
+    (doto (CompilationUnit. compiler-configuration)
+      (add-source full-name)
+      (.setClassNodeResolver cnr)
+      (.setClassgenCallback cc)
+      (.compile Phases/CLASS_GENERATION))))
 
 (defn -name->class-name [ns name]
   (let [ns-part (namespace-munge ns)
