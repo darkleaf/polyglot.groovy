@@ -9,15 +9,12 @@ import org.codehaus.groovy.control.ClassNodeResolver.LookupResult;
 import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
 
-// use only loaded classes
-// no script compilation
-// no .class files usage
+// Uses only a class loader to resolve a class node.
+// Does not add new sources to a compilation unit.
+// Does not read .class files.
 public class DynamicClassNodeResolver extends ClassNodeResolver {
     public LookupResult findClassNode(final String name, final CompilationUnit compilationUnit) {
-        return compilationUnit == null ? null : findOnlyByClassLoading(name, compilationUnit);
-    }
-
-    private LookupResult findOnlyByClassLoading(final String name, final CompilationUnit compilationUnit) {
+        if (compilationUnit == null) return null;
         GroovyClassLoader loader = compilationUnit.getClassLoader();
         Class<?> cls;
         try {
