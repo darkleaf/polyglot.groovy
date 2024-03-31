@@ -11,6 +11,7 @@
    (org.codehaus.groovy.control CompilerConfiguration
                                 CompilationUnit
                                 CompilationUnit$ClassgenCallback
+                                SourceUnit
                                 Phases)))
 
 (set! *warn-on-reflection* true)
@@ -24,8 +25,11 @@
 (def default-compiler-configuration
   (compiler-configuration "darkleaf/polyglot/groovy/config.groovy"))
 
-(defn- add-source [^CompilationUnit unit full-name]
+(defn- add-source ^SourceUnit [^CompilationUnit unit full-name]
   (let [url (.. unit getClassLoader getResourceLoader (loadGroovySource full-name))]
+    (if (nil? url)
+      (throw (ex-info (str "Could not find a groovy file for " full-name)
+                      {:full-name full-name})))
     (.addSource unit url)))
 
 (defn- class-gen ^CompilationUnit$ClassgenCallback []
@@ -37,17 +41,26 @@
             loader        ^DynamicClassLoader @Compiler/LOADER
             compiledClass (.defineClass loader name bytecode nil)]))))
 
+(defn- check-main-class! [^SourceUnit su expected]
+  (let [actual (.. su getAST getMainClassName)]
+    (if (not= expected actual)
+      (throw (ex-info "Wrong main class" {:expected expected
+                                          :actual   actual})))))
+
+
 (defn -compile [full-name opts]
   (let [compiler-configuration
         ^CompilerConfiguration
         (get opts
              :compiler-configuration
-             default-compiler-configuration)]
-    (doto (CompilationUnit. compiler-configuration)
-      (add-source full-name)
-      (.setClassNodeResolver (DynamicClassNodeResolver.))
-      (.setClassgenCallback (class-gen))
-      (.compile Phases/CLASS_GENERATION))))
+             default-compiler-configuration)
+        unit (doto (CompilationUnit. compiler-configuration)
+               (.setClassNodeResolver (DynamicClassNodeResolver.))
+               (.setClassgenCallback (class-gen)))
+        su   (add-source unit full-name)]
+    (.compile unit Phases/CONVERSION)
+    (check-main-class! su full-name)
+    (.compile unit Phases/CLASS_GENERATION)))
 
 (defn -name->class-name [ns name]
   (let [ns-part (namespace-munge ns)
