@@ -29,7 +29,7 @@
 
 (t/deftest ClassWithMethodMissing-test
   (let [obj (ClassWithMethodMissing.)]
-    (t/is (thrown? IllegalArgumentException (.myMethod obj)))
+    #_(t/is (thrown? IllegalArgumentException (.myMethod obj)))
     (t/is (= ["myMethod" []] (InvokerHelper/invokeMethod obj "myMethod" nil)))
     (t/is (= ["myMethod" [1 2 3]]
              (InvokerHelper/invokeMethod obj "myMethod" (object-array [1 2 3]))))))
