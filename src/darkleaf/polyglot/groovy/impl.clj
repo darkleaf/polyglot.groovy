@@ -3,6 +3,7 @@
    [clojure.java.io :as io]
    [clojure.string :as str])
   (:import
+   (darkleaf.polyglot.groovy DynamicClassNodeResolver)
    (clojure.lang Compiler DynamicClassLoader)
    (groovy.lang GroovyResourceLoader)
    (groovy.ui GroovyMain)
@@ -24,18 +25,6 @@
 (def default-compiler-configuration
   (compiler-configuration "darkleaf/polyglot/groovy/config.groovy"))
 
-;; чтобы загружать только один груви файл
-;; и не загружать зависимости
-;; все зависимости идут через clojure
-(defn- filter-resource-loader! [^CompilationUnit unit pred]
-  (let [cl  (.getClassLoader unit)
-        rl  (.getResourceLoader cl)
-        rl* (reify GroovyResourceLoader
-              (loadGroovySource [_ filename]
-                (when (pred filename)
-                  (.loadGroovySource rl filename))))]
-    (.setResourceLoader cl rl*)))
-
 (defn -compile [full-name opts]
   (let [compiler-configuration
         ^CompilerConfiguration
@@ -44,7 +33,7 @@
              default-compiler-configuration)
 
         unit      (CompilationUnit. compiler-configuration)
-        _         (filter-resource-loader! unit #{full-name})
+        _         (.setClassNodeResolver unit (DynamicClassNodeResolver.))
         url       (.. unit getClassLoader getResourceLoader (loadGroovySource full-name))
         su        (.addSource unit url)
         cb        (reify CompilationUnit$ClassgenCallback
