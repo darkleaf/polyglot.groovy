@@ -11,8 +11,7 @@
    (org.codehaus.groovy.control CompilerConfiguration
                                 CompilationUnit
                                 CompilationUnit$ClassgenCallback
-                                Phases)
-   (org.codehaus.groovy.runtime InvokerHelper)))
+                                Phases)))
 
 (set! *warn-on-reflection* true)
 
@@ -55,17 +54,8 @@
         name    (munge name)]
     (symbol (str ns-part "." name))))
 
-;; todo: arglists
-;; todo?: remove reflection
-(defn -constructor [name classname]
-  (let [cname  (symbol (str "->" name))
-        params (with-meta '[& args]
-                 {:tag classname})]
-    `(defn ~cname ~params
-       (InvokerHelper/invokeConstructorOf ~classname (object-array ~'args)))))
-
 (defn -instantiate [name classname]
-  `(def ~name (new ~classname)))
+ `(def ~name (new ~classname)))
 
 (defn -defclass* [name opts]
   `(-compile ~(str name) ~opts))

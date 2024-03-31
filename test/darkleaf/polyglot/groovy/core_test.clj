@@ -8,9 +8,7 @@
 (g/defclass TestClass)
 
 (t/deftest class-test
-  (t/is (= [] (.getArgs (->TestClass))))
   (t/is (= [] (.getArgs (TestClass.))))
-  (t/is (= [1 2 3] (.getArgs (->TestClass 1 2 3))))
   (t/is (= [1 2 3] (.getArgs (TestClass. 1 2 3)))))
 
 

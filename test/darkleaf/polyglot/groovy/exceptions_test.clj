@@ -7,7 +7,7 @@
 
 (t/deftest my-exception-test
   (let [ex (try
-             (throw (->MyException "foo" {:data :ok}))
+             (throw (MyException. "foo" {:data :ok}))
              (catch MyException ex
                ex))]
     (t/is (= "foo" (ex-message ex)))

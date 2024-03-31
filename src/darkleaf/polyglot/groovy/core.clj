@@ -11,7 +11,6 @@
     `(do
        ~(impl/-defclass* classname opts)
        (import ~classname)
-       ~(impl/-constructor name classname)
        ~classname)))
 
 (defmacro defobject [name & {:as opts}]
