@@ -1,3 +1,17 @@
+* CljAdapter
+
+статически импортить
+
++ prn
++ requiringResolve
++ ...
+
+* prn
+
+сделать prn
+так же как println
+
+
 * соображения
 
 ** класс
