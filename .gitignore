@@ -1,6 +1,6 @@
 /.idea
 /.cpcache
 /.nrepl-port
-/groovy.iml
+/*groovy.iml
 /classes
 /target/classes
