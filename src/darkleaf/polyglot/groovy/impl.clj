@@ -16,13 +16,13 @@
 
 (set! *warn-on-reflection* true)
 
-(defn compiler-configuration [named-resource]
+(defn- compiler-configuration [named-resource]
   (let [cc     (CompilerConfiguration.)
         config (-> named-resource io/resource slurp)]
     (GroovyMain/processConfigScriptText config cc)
     cc))
 
-(def default-compiler-configuration
+(def ^:private ^CompilerConfiguration default-compiler-configuration
   (compiler-configuration "darkleaf/polyglot/groovy/config.groovy"))
 
 (defn- add-source ^SourceUnit [^CompilationUnit unit full-name]
@@ -47,17 +47,12 @@
       (throw (ex-info "Wrong main class" {:expected expected
                                           :actual   actual})))))
 
-
-(defn -compile [full-name opts]
-  (let [compiler-configuration
-        ^CompilerConfiguration
-        (get opts
-             :compiler-configuration
-             default-compiler-configuration)
-        unit (doto (CompilationUnit. compiler-configuration)
-               (.setClassNodeResolver (DynamicClassNodeResolver.))
-               (.setClassgenCallback (class-gen)))
-        su   (add-source unit full-name)]
+(defn -compile [full-name]
+  (let [full-name (str full-name)
+        unit      (doto (CompilationUnit. default-compiler-configuration)
+                    (.setClassNodeResolver (DynamicClassNodeResolver.))
+                    (.setClassgenCallback (class-gen)))
+        su        (add-source unit full-name)]
     (.compile unit Phases/CONVERSION)
     (check-main-class! su full-name)
     (.compile unit Phases/CLASS_GENERATION)))
@@ -69,6 +64,3 @@
 
 (defn -instantiate [name classname]
  `(def ~name (new ~classname)))
-
-(defn -defclass* [name opts]
-  `(-compile ~(str name) ~opts))

@@ -2,20 +2,13 @@
   (:require
     [darkleaf.polyglot.groovy.impl :as impl]))
 
-(defn compiler-configuration [named-resource]
-  (impl/compiler-configuration named-resource))
-
 ;; deftype like
-(defmacro defclass [name & {:as opts}]
-  (let [classname (impl/-name->class-name *ns* name)]
-    `(do
-       ~(impl/-defclass* classname opts)
-       (import ~classname)
-       ~classname)))
+(defmacro defclass [main-class & other-classes]
+  (impl/-compile (impl/-name->class-name *ns* main-class))
+  `(import ~@(for [name (cons main-class other-classes)]
+               (impl/-name->class-name *ns* name))))
 
-(defmacro defobject [name & {:as opts}]
+(defmacro defobject [name]
   (let [classname (impl/-name->class-name *ns* name)]
-    `(do
-       ~(impl/-defclass* classname opts)
-       ~(impl/-instantiate name classname)
-       (var ~name))))
+    (impl/-compile classname)
+    (impl/-instantiate name classname)))
