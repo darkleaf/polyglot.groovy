@@ -1,7 +1,14 @@
 configuration.parameters = true
 
-configuration.scriptExtensions = ['groovy', 'gvy', 'gy',
-                                  'sgroovy', 'dgroovy', 'sg', 'dg']
+configuration.scriptExtensions = [
+  // static groovy:
+  'groovy', 'gvy', 'gy',
+  'sgroovy', 'sg',
+  // java as static groovy
+  'java',
+  // dynamic groovy
+  'dgroovy', 'dg'
+]
 
 withConfig(configuration) {
   imports {
@@ -17,7 +24,7 @@ withConfig(configuration) {
     normal 'groovy.transform.CompileDynamic'
   }
 
-  source(extensions: ['groovy', 'gvy', 'gy', 'sgroovy', 'sg']) {
+  source(extensions: ['groovy', 'gvy', 'gy', 'sgroovy', 'sg', 'java']) {
     ast(groovy.transform.CompileStatic)
   }
 }
