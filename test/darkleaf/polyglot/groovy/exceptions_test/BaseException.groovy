@@ -3,4 +3,7 @@ package darkleaf.polyglot.groovy.exceptions_test
 import groovy.transform.InheritConstructors
 
 @InheritConstructors
-class MyException extends ExceptionInfo {}
+class BaseException extends ExceptionInfo {}
+
+@InheritConstructors
+class ConcreteException extends BaseException {}
