@@ -5,7 +5,7 @@
                  :fn     prep-lib
                  :ensure "target/classes"}
  :aliases
- {:dev {:extra-paths ["test" "dev"]
+ {:dev {:extra-paths ["test" "dev" "classes"]
         :extra-deps  {criterium/criterium                {:mvn/version "0.4.6"}
                       org.apache.groovy/groovy-xml       {:mvn/version "4.0.20"}
                       org.apache.groovy/groovy-templates {:mvn/version "4.0.20"}

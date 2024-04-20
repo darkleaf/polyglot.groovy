@@ -4,7 +4,7 @@
    [clojure.string :as str])
   (:import
    (darkleaf.polyglot.groovy DynamicClassNodeResolver)
-   (clojure.lang Compiler DynamicClassLoader)
+   (clojure.lang RT Compiler DynamicClassLoader)
    (groovy.lang GroovyResourceLoader)
    (groovy.ui GroovyMain)
    (groovyjarjarasm.asm ClassWriter)
@@ -16,20 +16,14 @@
 
 (set! *warn-on-reflection* true)
 
-(defn- compiler-configuration [named-resource]
+(defn- compiler-configuration ^CompilerConfiguration [named-resource]
   (let [cc     (CompilerConfiguration.)
         config (-> named-resource io/resource slurp)]
     (GroovyMain/processConfigScriptText config cc)
     cc))
 
-(def ^:private ^CompilerConfiguration default-compiler-configuration
-  (compiler-configuration "darkleaf/polyglot/groovy/config.groovy"))
-
 (defn- add-source ^SourceUnit [^CompilationUnit unit full-name]
-  (let [url (.. unit getClassLoader getResourceLoader (loadGroovySource full-name))]
-    (if (nil? url)
-      (throw (ex-info (str "Could not find a groovy file for " full-name)
-                      {:full-name full-name})))
+  (when-some [url (.. unit getClassLoader getResourceLoader (loadGroovySource full-name))]
     (.addSource unit url)))
 
 (defn- class-gen ^CompilationUnit$ClassgenCallback []
@@ -49,13 +43,30 @@
 
 (defn -compile [full-name]
   (let [full-name (str full-name)
-        unit      (doto (CompilationUnit. default-compiler-configuration)
+        cc        (doto (compiler-configuration "darkleaf/polyglot/groovy/config.groovy")
+                    (.setTargetDirectory (io/file *compile-path*)))
+        unit      (doto (CompilationUnit. cc)
                     (.setClassNodeResolver (DynamicClassNodeResolver.))
                     (.setClassgenCallback (class-gen)))
         su        (add-source unit full-name)]
-    (.compile unit Phases/CONVERSION)
-    (check-main-class! su full-name)
-    (.compile unit Phases/CLASS_GENERATION)))
+    (cond
+      ;; a source code is preferable to a compiled class
+      (some? su)
+      (do
+        (.compile unit Phases/CONVERSION)
+        (check-main-class! su full-name)
+        (.compile unit Phases/CLASS_GENERATION)
+        (if *compile-files*
+          (.compile unit Phases/OUTPUT)))
+
+      ;; already compiled one
+      (some? (RT/loadClassForName full-name))
+      nil
+
+      :else
+      (throw
+       (ex-info (str "Could not find a groovy file or a compiled one for " full-name)
+                {:full-name full-name})))))
 
 (defn -name->class-name [ns name]
   (let [ns-part (namespace-munge ns)
