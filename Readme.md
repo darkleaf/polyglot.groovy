@@ -98,6 +98,12 @@ exceptions
 
 ## API
 
+### Extensions
+
++ `with`
++ `rwith`
++ `tap`
+
 ## Compilation
 
 When a clojure ns compiles it also compile all defined groovy classes just like `deftype`.
