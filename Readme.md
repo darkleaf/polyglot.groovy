@@ -13,6 +13,12 @@ Works like regular `deftype`.
 
 ## Installation
 
+Beta stage.
+
+```clojure
+{:deps {io.github.darkleaf/polyglot.groovy {:git/sha "%SHA%"}}
+```
+
 ```sh
 clj -T:build prep-lib
 ```
