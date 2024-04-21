@@ -50,6 +50,9 @@
                     (.setClassgenCallback (class-gen)))
         su        (add-source unit full-name)]
     (cond
+      ;; todo:
+      ;; if both .groovy and .class in a jar we should prefer .class
+
       ;; a source code is preferable to a compiled class
       (some? su)
       (do
@@ -59,6 +62,7 @@
         (if *compile-files*
           (.compile unit Phases/OUTPUT)))
 
+      ;; todo: we can lookup a .class in a classpath
       ;; already compiled one
       (some? (RT/loadClassForName full-name))
       nil
